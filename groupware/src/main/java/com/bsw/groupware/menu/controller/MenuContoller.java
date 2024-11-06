@@ -22,7 +22,7 @@ public class MenuContoller {
 		System.out.println(menu.getMenu_nm());
 		System.out.println(menu.getMenu_seq());
 		System.out.println(menu.getMenu_url());
-		// ddd
+		System.out.println("git 로그인 정보 저장 테스트 진행");
 		return "test";
 	}
 
