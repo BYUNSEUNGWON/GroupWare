@@ -22,7 +22,7 @@ public class MenuContoller {
 		System.out.println(menu.getMenu_nm());
 		System.out.println(menu.getMenu_seq());
 		System.out.println(menu.getMenu_url());
-		
+		// ddd
 		return "test";
 	}
 
