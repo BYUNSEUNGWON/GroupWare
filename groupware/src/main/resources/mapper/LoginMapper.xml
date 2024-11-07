@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bsw.groupware.mapper.LoginMapper">
+    
+    <select id="getCheckUserId">
+    	SELECT COUNT(*) FROM IA_USER_TN WHERE USER_ID = #{userId}
+    </select>
+    
+    <insert id="saveUser" parameterType="HashMap">
+    	INSERT INTO IA_USER_TN (
+ 			USER_ID, 
+ 			USER_PW, 
+ 			USER_NAME, 
+ 			USER_NICK, 
+ 			USER_DEPT, 
+ 			USER_JOB_POSITION, 
+ 			EMAIL, 
+ 			PHONE, 
+ 			USER_IP, 
+ 			REGIST_DT
+ 		) VALUES (
+ 			#{user_id},
+ 			#{password},
+ 			#{name},
+ 			#{nickname},
+ 			#{dept},
+ 			#{position},
+ 			#{email},
+ 			#{phone},
+ 			#{user_ip},
+ 			NOW()
+		)
+    </insert>
+</mapper>
