@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bsw.groupware.login.service.LoginService;
+import com.bsw.groupware.login.service.NaverService;
 import com.bsw.groupware.mapper.LoginMapper;
 import com.bsw.groupware.model.UserVO;
 
@@ -14,6 +15,8 @@ public class LoginServiceImpl implements LoginService{
 	
 	@Autowired
 	LoginMapper loginMapper;
+	
+	private NaverService naverService;
 	
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -35,6 +38,5 @@ public class LoginServiceImpl implements LoginService{
 			throw new Exception("User 저장 실패", e);
 		}
 	}
-	
 
 }

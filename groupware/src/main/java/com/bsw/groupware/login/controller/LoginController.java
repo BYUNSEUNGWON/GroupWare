@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.bsw.groupware.common.MsgEntity;
 import com.bsw.groupware.login.service.LoginService;
 import com.bsw.groupware.login.service.NaverService;
-import com.bsw.groupware.model.NaverDTO;
+import com.bsw.groupware.model.NaverVO;
 import com.bsw.groupware.model.UserVO;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -91,14 +91,5 @@ public class LoginController {
 			return ResponseEntity.ok().body("duplicate");
     	}
     }
-	
-	@GetMapping("/callback")
-    public ResponseEntity<MsgEntity> callback(HttpServletRequest request) throws Exception {
-        NaverDTO naverInfo = naverService.getNaverInfo(request.getParameter("code"));
-
-        return ResponseEntity.ok()
-                .body(new MsgEntity("Success", naverInfo));
-    
-	}
 
 }

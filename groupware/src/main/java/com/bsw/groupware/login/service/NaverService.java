@@ -12,7 +12,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import com.bsw.groupware.model.NaverDTO;
+import com.bsw.groupware.model.NaverVO;
 
 @Service
 public class NaverService {
@@ -36,7 +36,7 @@ public class NaverService {
                 + "&response_type=code";
     }
 
-    public NaverDTO getNaverInfo(String code) throws Exception {
+    public NaverVO getNaverInfo(String code) throws Exception {
         if (code == null) throw new Exception("Failed get authorization code");
 
         String accessToken = "";
@@ -75,7 +75,7 @@ public class NaverService {
         return getUserInfoWithToken(accessToken);
     }
 
-    private NaverDTO getUserInfoWithToken(String accessToken) throws Exception {
+    private NaverVO getUserInfoWithToken(String accessToken) throws Exception {
         //HttpHeader 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
@@ -95,15 +95,22 @@ public class NaverService {
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj    = (JSONObject) jsonParser.parse(response.getBody());
         JSONObject account = (JSONObject) jsonObj.get("response");
+        
+        NaverVO naver = new NaverVO();
 
         String id = String.valueOf(account.get("id"));
         String email = String.valueOf(account.get("email"));
         String name = String.valueOf(account.get("name"));
-
-        return NaverDTO.builder()
-                    .id(id)
-                    .email(email)
-                    .name(name).build();
+        
+        System.out.println("id ==> " + id);
+        System.out.println("email ==>" + email);
+        System.out.println("name ==>" + name);
+        
+        naver.setId(id);
+        naver.setEmail(email);
+        naver.setName(name);
+        
+        return naver;
     }
 
 }
