@@ -1,17 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="../common/header.jsp" %>
-    
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Dashboard</title>
 <style>
-    body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-    }
     .dashboard-container {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -25,7 +20,7 @@
         padding: 20px;
         text-align: center;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        height: 250px;
+        height: 260px;
     }
     .dashboard-item h2 {
         margin: 0 0 10px;
@@ -37,7 +32,8 @@
     }
 </style>
 </head>
-<body>        
+<body>
+        
     <div class="dashboard-container">
         <div class="dashboard-item">
             <h2>메뉴 1</h2>

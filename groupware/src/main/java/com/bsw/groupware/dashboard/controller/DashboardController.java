@@ -35,7 +35,6 @@ public class DashboardController {
 	public String showDashboard(HttpSession session) {
 		
 		String user = (String) session.getAttribute("user");
-		System.out.println("seession == > " + user);
 		
 		return "/dashboard/commonDashboard";
 	}
