@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="UTF-8">
 <head>
     <meta charset="UTF-8">
     <title>로그인 페이지</title>
@@ -110,8 +110,8 @@
         }
 
         function handleKakaoLogin() {
-            // 카카오 로그인 로직 추가
-            alert('카카오 로그인 기능은 구현 중입니다.');
+            var kakaoUrl = "${kakaoUrl}";
+            window.location.href = kakaoUrl;
         }
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -119,6 +119,11 @@
             document.querySelector('.signup-btn').addEventListener('click', handleSignup);
             document.querySelector('.naver-btn').addEventListener('click', handleNaverLogin);
             document.querySelector('.kakao-btn').addEventListener('click', handleKakaoLogin);
+            document.addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    handleLogin();
+                }
+            });
         });
     </script>
 </head>
@@ -136,9 +141,9 @@
     </c:if>
     <div class="login-container">
         <h2>로그인</h2>
-        <form action="LoginServlet" method="post">
-            <input type="text" name="username" placeholder="아이디" required>
-            <input type="password" name="password" placeholder="비밀번호" required>
+        <form action='/doLogin.ex' method="post">
+            <input type="text" name="username" placeholder="아이디" required autocomplete="current-name">
+            <input type="password" name="password" placeholder="비밀번호" required autocomplete="current-password">
         </form>
         
         <div class="social-login">

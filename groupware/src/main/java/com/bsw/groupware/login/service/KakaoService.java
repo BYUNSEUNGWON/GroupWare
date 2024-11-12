@@ -12,31 +12,35 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import com.bsw.groupware.model.KakaoVO;
 import com.bsw.groupware.model.NaverVO;
 
 @Service
-public class NaverService {
+public class KakaoService {
 
-    @Value("${naver.client.id}")
-    private String NAVER_CLIENT_ID;
+    @Value("${kakao.client.id}")
+    private String KAKAO_CLIENT_ID;
 
-    @Value("${naver.client.secret}")
-    private String NAVER_CLIENT_SECRET;
+    @Value("${kakao.client.secret}")
+    private String KAKAO_CLIENT_SECRET;
 
-    @Value("${naver.redirect.url}")
-    private String NAVER_REDIRECT_URL;
+    @Value("${kakao.redirect.url}")
+    private String KAKAO_REDIRECT_URL;
+    
+    @Value("${kakao.response_type}")
+    private String KAKAO_RESPONSE_TYPE;
+    
+    private final static String KAKAO_AUTH_URI = "https://kauth.kakao.com";
+    private final static String KAKAO_API_URI = "https://kapi.kakao.com";
 
-    private final static String NAVER_AUTH_URI = "https://nid.naver.com";
-    private final static String NAVER_API_URI = "https://openapi.naver.com";
-
-    public String getNaverLogin() {
-        return NAVER_AUTH_URI + "/oauth2.0/authorize"
-                + "?client_id=" + NAVER_CLIENT_ID
-                + "&redirect_uri=" + NAVER_REDIRECT_URL
+    public String getKakaoLogin() {
+        return KAKAO_AUTH_URI + "/oauth/authorize"
+                + "?client_id=" + KAKAO_CLIENT_ID
+                + "&redirect_uri=" + KAKAO_REDIRECT_URL
                 + "&response_type=code";
     }
-
-    public NaverVO getNaverInfo(String code) throws Exception {
+    
+    public KakaoVO getKakaoInfo(String code) throws Exception {
         if (code == null) throw new Exception("Failed get authorization code");
 
         String accessToken = "";
@@ -48,16 +52,16 @@ public class NaverService {
 
 	        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 	        params.add("grant_type"   , "authorization_code");
-	        params.add("client_id"    , NAVER_CLIENT_ID);
-	        params.add("client_secret", NAVER_CLIENT_SECRET);
+	        params.add("client_id"    , KAKAO_CLIENT_ID);
+	        params.add("client_secret", KAKAO_CLIENT_SECRET);
 	        params.add("code"         , code);
-	        params.add("redirect_uri" , NAVER_REDIRECT_URL);
+	        params.add("redirect_uri" , KAKAO_REDIRECT_URL);
 
 	        RestTemplate restTemplate = new RestTemplate();
 	        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
 
 	        ResponseEntity<String> response = restTemplate.exchange(
-	        		NAVER_AUTH_URI + "/oauth2.0/token",
+	        		KAKAO_AUTH_URI + "/oauth/token",
 	                HttpMethod.POST,
 	                httpEntity,
 	                String.class
@@ -75,7 +79,7 @@ public class NaverService {
         return getUserInfoWithToken(accessToken);
     }
 
-    private NaverVO getUserInfoWithToken(String accessToken) throws Exception {
+    private KakaoVO getUserInfoWithToken(String accessToken) throws Exception {
         //HttpHeader 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
@@ -85,7 +89,7 @@ public class NaverService {
         RestTemplate rt = new RestTemplate();
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(headers);
         ResponseEntity<String> response = rt.exchange(
-                NAVER_API_URI + "/v1/nid/me",
+                KAKAO_API_URI + "/v2/user/me",
                 HttpMethod.POST,
                 httpEntity,
                 String.class
@@ -94,28 +98,18 @@ public class NaverService {
         //Response 데이터 파싱
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj    = (JSONObject) jsonParser.parse(response.getBody());
-        JSONObject account = (JSONObject) jsonObj.get("response");
+        JSONObject account = (JSONObject) jsonObj.get("kakao_account");
+        JSONObject profile = (JSONObject) account.get("profile");
         
-        NaverVO naver = new NaverVO();
+        Long id = (Long) jsonObj.get("id");
+        String nickname = String.valueOf(profile.get("nickname"));
+        String newId = String.valueOf(id);
+        
+        KakaoVO kakao = new KakaoVO();
+        
+        kakao.setId(newId);
+        kakao.setNickname(nickname);
 
-        String id = String.valueOf(account.get("id"));
-        String email = String.valueOf(account.get("email"));
-        String name = String.valueOf(account.get("name"));
-        String birthday = String.valueOf(account.get("birthday"));
-        String nickname = String.valueOf(account.get("nickname"));
-        String mobile = String.valueOf(account.get("mobile"));
-        
-        mobile = mobile.replaceAll("-","");
-         
-        naver.setId(id);
-        naver.setEmail(email);
-        naver.setName(name);
-        naver.setBirthday(birthday);
-        naver.setMobile(mobile);
-        naver.setNickname(nickname);
-        
-        
-        return naver;
+        return kakao;
     }
-
 }

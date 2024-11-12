@@ -30,13 +30,38 @@ public class LoginServiceImpl implements LoginService{
     @Transactional
 	@Override
 	public void saveUser(UserVO user) throws Exception {
-		String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-        try {
+    	if(user.getPassword() != null && !user.getPassword().isEmpty()) {
+    		String encodedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(encodedPassword);	
+    	}
+		try {
             loginMapper.saveUser(user);	
 		} catch (Exception e) {
 			throw new Exception("User 저장 실패", e);
 		}
+	}
+
+	@Override
+	public boolean authenticate(String username, String password) {
+        UserVO user = loginMapper.findByUsername(username);
+        if(user != null) {
+            if (user.isNaverUser()) {
+            	System.out.println("naverUser True");
+            	return true;
+            } else if(user.isKakaoUser()) {
+            	System.out.println("kakaoUser True");
+            	return true;
+            } else if(passwordEncoder.matches(password, user.getPassword())){
+            	System.out.println("passwd encoding start");
+            	return true;
+            } else {
+            	System.out.println("user null");
+            	return false;
+            }
+        }else {
+        	System.out.println("mapper is null");
+        	return false;
+        }
 	}
 
 }

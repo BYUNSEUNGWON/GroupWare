@@ -17,7 +17,9 @@
  			USER_DEPT, 
  			USER_JOB_POSITION, 
  			EMAIL, 
- 			PHONE, 
+ 			PHONE,
+ 			NAVER_USER,
+ 			KAKAO_USER, 
  			USER_IP, 
  			REGIST_DT
  		) VALUES (
@@ -29,8 +31,30 @@
  			#{position},
  			#{email},
  			#{phone},
+ 			#{naverUser},
+ 			#{kakaoUser},
  			#{user_ip},
  			NOW()
 		)
     </insert>
+    
+    <select id="findByUsername">
+    	SELECT
+			SEQ, 	
+			USER_ID, 
+			USER_PW as password,
+			USER_NAME as name,
+			USER_NICK as nickname,
+			USER_DEPT as dept, 
+			USER_JOB_POSITION as position, 
+			EMAIL as eamil, 
+			PHONE as phone,
+			NAVER_USER as naverUser,
+			KAKAO_USER as kakaoUser, 
+			USER_IP, 
+			REGIST_DT, 
+			UPDT_DT
+		FROM IA_USER_TN
+        WHERE USER_ID = #{username}
+    </select>
 </mapper>

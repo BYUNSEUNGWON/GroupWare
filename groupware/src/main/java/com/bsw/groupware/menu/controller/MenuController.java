@@ -11,7 +11,7 @@ public class MenuController {
 	
 	@RequestMapping("/")
 	public void index(HttpServletResponse response) throws Exception{
-		String login = "/login.ex";
+		String login = "login.ex";
 		response.sendRedirect(login);
 	}
 

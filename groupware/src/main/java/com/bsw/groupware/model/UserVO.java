@@ -10,6 +10,9 @@ public class UserVO {
 	private String position;
 	private String email;
 	private String phone;
+	private boolean naverUser;
+	private boolean kakaoUser;
+	
 	public String getUser_id() {
 		return user_id;
 	}
@@ -65,15 +68,29 @@ public class UserVO {
 		this.phone = phone;
 	}
 	
+	public boolean isNaverUser() {
+		return naverUser;
+	}
+	public void setNaverUser(boolean naverUser) {
+		this.naverUser = naverUser;
+	}
+	
+	public boolean isKakaoUser() {
+		return kakaoUser;
+	}
+	public void setKakaoUser(boolean kakaoUser) {
+		this.kakaoUser = kakaoUser;
+	}
 	@Override
 	public String toString() {
 		return "UserVO [user_id=" + user_id + ", user_ip=" + user_ip + ", password=" + password + ", name=" + name
 				+ ", nickname=" + nickname + ", dept=" + dept + ", position=" + position + ", email=" + email
-				+ ", phone=" + phone + ", getUser_id()=" + getUser_id() + ", getUser_ip()=" + getUser_ip()
-				+ ", getPassword()=" + getPassword() + ", getName()=" + getName() + ", getNickname()=" + getNickname()
-				+ ", getDept()=" + getDept() + ", getPosition()=" + getPosition() + ", getEmail()=" + getEmail()
-				+ ", getPhone()=" + getPhone() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
-				+ ", toString()=" + super.toString() + "]";
+				+ ", phone=" + phone + ", naverUser=" + naverUser + ", kakaoUser=" + kakaoUser + ", getUser_id()="
+				+ getUser_id() + ", getUser_ip()=" + getUser_ip() + ", getPassword()=" + getPassword() + ", getName()="
+				+ getName() + ", getNickname()=" + getNickname() + ", getDept()=" + getDept() + ", getPosition()="
+				+ getPosition() + ", getEmail()=" + getEmail() + ", getPhone()=" + getPhone() + ", isNaverUser()="
+				+ isNaverUser() + ", isKakaoUser()=" + isKakaoUser() + ", getClass()=" + getClass() + ", hashCode()="
+				+ hashCode() + ", toString()=" + super.toString() + "]";
 	}
 	
 	

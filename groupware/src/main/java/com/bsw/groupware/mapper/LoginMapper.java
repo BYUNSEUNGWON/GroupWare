@@ -11,4 +11,6 @@ public interface LoginMapper {
 	int getCheckUserId(String userId);
 
 	void saveUser(UserVO user);
+
+	UserVO findByUsername(String username);
 }

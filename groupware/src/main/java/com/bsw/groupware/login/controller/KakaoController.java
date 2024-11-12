@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.bsw.groupware.common.MsgEntity;
+import com.bsw.groupware.login.service.KakaoService;
 import com.bsw.groupware.login.service.LoginService;
 import com.bsw.groupware.login.service.NaverService;
+import com.bsw.groupware.model.KakaoVO;
 import com.bsw.groupware.model.NaverVO;
 import com.bsw.groupware.model.UserVO;
 
@@ -25,33 +27,30 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
-public class NaverController {
+public class KakaoController {
 	
 	@Autowired
-	private NaverService naverService;
-	
+	private KakaoService kakaoService;
 	
 	@Autowired
 	private LoginService loginService;
 	
-	@GetMapping("/naverLoginCallback.ex")
+	@GetMapping("/kakaoCallback.ex")
     public String callback(HttpServletRequest request, RedirectAttributes redirectAttributes) throws Exception {
-        NaverVO naverInfo = naverService.getNaverInfo(request.getParameter("code"));
-        int naverInfoCount = loginService.checkUserId(naverInfo.getId());
-        
-        if(naverInfoCount == 0) {
+        KakaoVO kakaoInfo = kakaoService.getKakaoInfo(request.getParameter("code"));
+        int kakaoInfoCount = loginService.checkUserId(kakaoInfo.getId());
+
+        if(kakaoInfoCount == 0) {
         	UserVO user = new UserVO();
-        	user.setUser_id(naverInfo.getId());
-        	user.setEmail(naverInfo.getEmail());
-        	user.setName(naverInfo.getName());
-        	user.setPhone(naverInfo.getMobile());
-        	user.setNickname(naverInfo.getNickname());
-        	user.setNaverUser(true);
+        	user.setUser_id(kakaoInfo.getId());
+        	user.setName(kakaoInfo.getNickname());
+        	user.setKakaoUser(true);
         	loginService.saveUser(user);
         }
-        
-        redirectAttributes.addAttribute("username", naverInfo.getId());
+
+        redirectAttributes.addAttribute("username", kakaoInfo.getId());
         redirectAttributes.addAttribute("password", "");
+		
 
         return "redirect:/doLogin.ex";
 	}

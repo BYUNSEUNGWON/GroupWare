@@ -8,5 +8,7 @@ public interface LoginService {
 	int checkUserId(String userId) throws Exception;
 	
 	void saveUser(UserVO user) throws Exception;
+
+	boolean authenticate(String username, String password);
 	
 }

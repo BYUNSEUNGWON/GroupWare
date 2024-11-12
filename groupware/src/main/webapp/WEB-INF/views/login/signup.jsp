@@ -283,7 +283,8 @@ $(document).ready(function() {
         } else {
             $('input[name="phone"]').val(cleanedPhone);
         }
-        
+        checkPhone = true;
+        checkPhoneDetail = true;
 	    if (!checkPhone) {
 	        alert("휴대폰 인증을 완료해주세요.");
 	        $('input[name="phone"]').focus();
