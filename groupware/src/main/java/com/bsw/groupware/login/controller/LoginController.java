@@ -3,6 +3,8 @@ package com.bsw.groupware.login.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,11 +25,15 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@Slf4j
 public class LoginController {
+	
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
 	private LoginService loginService;
@@ -87,7 +93,9 @@ public class LoginController {
     
     @GetMapping("/checkUserId.ex")
     public ResponseEntity<String> checkUserId(@RequestParam String userId) throws Exception {
+    	logger.debug("checkUserId :: {}", userId);
     	int count = loginService.checkUserId(userId);
+    	logger.debug("count :: {}", count);
     	if(count == 0) {
     		return ResponseEntity.ok().body("success");
     	}else {

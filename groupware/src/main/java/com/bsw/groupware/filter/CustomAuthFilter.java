@@ -28,6 +28,7 @@ public class CustomAuthFilter implements Filter {
         String doLoginURI = httpServletRequest.getContextPath() + "/doLogin.ex";
         String naverLoginURI = httpServletRequest.getContextPath() + "/naverLoginCallback.ex";
         String kakaoLoginURI = httpServletRequest.getContextPath() + "/kakaoCallback.ex";
+        String checkUserIdURI = httpServletRequest.getContextPath() + "/checkUserId.ex";
 
         boolean loggedIn = httpServletRequest.getSession().getAttribute("user") != null;
         boolean loginRequest = httpServletRequest.getRequestURI().equals(loginURI);
@@ -35,8 +36,9 @@ public class CustomAuthFilter implements Filter {
         boolean doLoginRequest = httpServletRequest.getRequestURI().equals(doLoginURI);
         boolean naverLoginRequest = httpServletRequest.getRequestURI().equals(naverLoginURI);
         boolean kakaoLoginRequest = httpServletRequest.getRequestURI().equals(kakaoLoginURI);
+        boolean checkUserIdURIrRequest = httpServletRequest.getRequestURI().equals(checkUserIdURI);
 
-        if (loggedIn || loginRequest || signupRequest || doLoginRequest || naverLoginRequest || kakaoLoginRequest) {
+        if (loggedIn || loginRequest || signupRequest || doLoginRequest || naverLoginRequest || kakaoLoginRequest || checkUserIdURIrRequest) {
             chain.doFilter(request, response);
         } else {
             httpServletResponse.sendRedirect(loginURI);
