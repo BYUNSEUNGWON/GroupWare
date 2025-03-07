@@ -34,9 +34,7 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
-        .login-btn {
-            background-color: #007BFF;
-            color: white;
+        .login-btn, .signup-btn, .naver-btn, .kakao-btn {
             padding: 10px;
             border: none;
             border-radius: 5px;
@@ -45,6 +43,10 @@
             font-size: 16px;
             margin-top: 10px;
             box-sizing: border-box;
+        }
+        .login-btn {
+            background-color: #007BFF;
+            color: white;
         }
         .login-btn:hover {
             background-color: #0056b3;
@@ -52,14 +54,6 @@
         .signup-btn {
             background-color: #6c757d;
             color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
-            box-sizing: border-box;
         }
         .signup-btn:hover {
             background-color: #5a6268;
@@ -67,14 +61,7 @@
         .naver-btn {
             background-color: #1ec800;
             color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
-            box-sizing: border-box;
+            width: 49%;
         }
         .naver-btn:hover {
             background-color: #1ba600;
@@ -82,17 +69,14 @@
         .kakao-btn {
             background-color: #fee500;
             color: black;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
-            box-sizing: border-box;
+            width: 49%;
         }
         .kakao-btn:hover {
             background-color: #ecd600;
+        }
+        .social-login-horizontal {
+            display: flex;
+            justify-content: space-between;
         }
     </style>
     <script>
@@ -105,7 +89,7 @@
         }
 
         function handleNaverLogin() {
-        	var naverUrl = "${naverUrl}";
+            var naverUrl = "${naverUrl}";
             window.location.href = naverUrl;
         }
 
@@ -144,13 +128,16 @@
         <form action='/doLogin.ex' method="post">
             <input type="text" name="username" placeholder="아이디" required autocomplete="current-name">
             <input type="password" name="password" placeholder="비밀번호" required autocomplete="current-password">
+			
         </form>
         
         <div class="social-login">
             <button type="button" class="login-btn">로그인</button>
             <button type="button" class="signup-btn">회원가입</button>
-            <button type="button" class="naver-btn">네이버 로그인</button>
-            <button type="button" class="kakao-btn">카카오 로그인</button>
+        </div>
+        <div class="social-login-horizontal">
+            <button type="button" class="naver-btn">네이버</button>
+            <button type="button" class="kakao-btn">카카오</button>
         </div>
     </div>
 </body>

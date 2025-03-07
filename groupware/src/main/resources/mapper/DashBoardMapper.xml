@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bsw.groupware.mapper.DashBoardMapper">
+    <insert id="startJob">
+    	INSERT INTO IA_HR_TN(USER_ID, START_DT, REGIST_DT)
+    	VALUES(#{user}, NOW(), NOW());
+    </insert>
+    
+    <select id="getSelctJob">
+    	SELECT START_DT, END_DT FROM IA_HR_TN
+    	WHERE USER_ID = #{user}
+    		AND DATE(START_DT) = CURDATE()
+    		AND (END_DT IS NULL OR DATE(END_DT) = CURDATE())
+    </select>
+</mapper>
