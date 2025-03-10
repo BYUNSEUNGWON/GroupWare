@@ -72,7 +72,7 @@
 <body>
     <div class="navbar">
         <div class="navbar-menu">
-            <a href="#home">Home</a>
+            <a href="/hrList.ex">근태기록</a>
             <a href="#services">Services</a>
             <a href="#about">About</a>
             <a href="#contact">Contact</a>
@@ -94,7 +94,6 @@
     <script type="text/javascript">
     $(document).ready(function() {
         $("#user-button").click(function() {
-            console.log("버튼 클릭");
             $(this).next(".dropdown-content").slideToggle("fast");
         });
         $(window).click(function(e) {
@@ -102,6 +101,7 @@
                 $(".dropdown-content").slideUp("fast");
             }
         });
+        
     });
     </script>
 </body>

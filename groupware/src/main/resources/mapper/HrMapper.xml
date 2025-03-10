@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bsw.groupware.mapper.HrMapper">
+    <!-- 사용자별 출근/퇴근 시간 정보 쿼리 -->
+    <resultMap id="UserWorkTimesResultMap" type="map">
+        <result column="START_DT_STR" property="startDt" />
+        <result column="END_DT_STR" property="endDt" />
+    </resultMap>
+
+    <select id="getUserWorkTimes" resultMap="UserWorkTimesResultMap">
+        SELECT 
+            DATE_FORMAT(START_DT, '%Y-%m-%dT%H:%i:%s') AS START_DT_STR,
+            DATE_FORMAT(END_DT, '%Y-%m-%dT%H:%i:%s') AS END_DT_STR
+        FROM IA_HR_TN 
+        WHERE USER_ID = #{userId}
+          AND YEAR(START_DT) = #{year}
+    </select>
+    
+    <update id="updateWorkTimes" parameterType="map">
+        UPDATE IA_HR_TN
+        SET START_DT = #{startTime}, END_DT = #{endTime}
+        WHERE some_condition = #{someCondition}
+    </update>
+</mapper>

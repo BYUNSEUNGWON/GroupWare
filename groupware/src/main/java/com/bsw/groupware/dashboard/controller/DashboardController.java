@@ -47,10 +47,13 @@ public class DashboardController {
 	public String showDashboard(HttpSession session, Model model) {
 		
 	    String user = (String) session.getAttribute("user");
-	    String[] jobTime = dashBoardService.getSelctJob(user);
-	    String startDt = (jobTime.length > 0 ? jobTime[0] : null);
-	    String endDt = (jobTime.length > 1 ? jobTime[1] : null);
- 
+	    Map<String, Object> jobTimeMap = dashBoardService.getSelctJob(user);
+
+	    String startDt = (jobTimeMap != null && jobTimeMap.get("START_DT") != null) ? jobTimeMap.get("START_DT").toString() : null;
+	    String endDt = (jobTimeMap != null && jobTimeMap.get("END_DT") != null) ? jobTimeMap.get("END_DT").toString() : null;
+
+	    logger.info("startDT Value :: {}", startDt);
+	    logger.info("endDT Value :: {}", endDt);
 	    model.addAttribute("startDt", startDt);
 	    model.addAttribute("endDt", endDt);
 
@@ -62,6 +65,15 @@ public class DashboardController {
 		
 		String user = (String) session.getAttribute("user");
 		dashBoardService.startJob(user);
+		
+		return "/dashboard/commonDashboard";
+	}
+	
+	@RequestMapping("/endJob.ex")
+	public String endJob(HttpSession session) {
+		
+		String user = (String) session.getAttribute("user");
+		dashBoardService.endJob(user);
 		
 		return "/dashboard/commonDashboard";
 	}

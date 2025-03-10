@@ -37,12 +37,14 @@ public class CustomAuthFilter implements Filter {
         boolean naverLoginRequest = httpServletRequest.getRequestURI().equals(naverLoginURI);
         boolean kakaoLoginRequest = httpServletRequest.getRequestURI().equals(kakaoLoginURI);
         boolean checkUserIdURIrRequest = httpServletRequest.getRequestURI().equals(checkUserIdURI);
-
+/*	개발용으로 임시로 막아둠
         if (loggedIn || loginRequest || signupRequest || doLoginRequest || naverLoginRequest || kakaoLoginRequest || checkUserIdURIrRequest) {
             chain.doFilter(request, response);
         } else {
             httpServletResponse.sendRedirect(loginURI);
         }
+*/
+        chain.doFilter(request, response);
     }
 
     @Override

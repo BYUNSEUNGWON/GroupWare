@@ -119,94 +119,137 @@
 	}
 </style>
 </head>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-    	
-    	var startDt = '${startDt}';
-        var endDt = '${endDt}';
-        // 가져오는거까지 작업함
-    	
-    	
-    	var now = new Date();
-    	var year = now.getFullYear();	// 연도
-    	var month = now.getMonth() + 1;	// 월 index가 0부터라서 +1 해줘야함
-    	if(month < 10) month = '0'+ month;
-    	var date = now.getDate();	// 일
-    	if(date < 10) date = '0'+ date;
-    	var day = getDay(now.getDay());	// 요일
-    	var fullDateStr = year+'.'+month+'.'+date+' (' + day + ')'; //2025.03.07 (금)
-        document.getElementById('todayDate').textContent = fullDateStr;
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var now = new Date();
+            var year = now.getFullYear();  // 연도
+            var month = now.getMonth() + 1;  // 월 index가 0부터라서 +1 해줘야함
+            if(month < 10) month = '0' + month;
+            var date = now.getDate();  // 일
+            if(date < 10) date = '0' + date;
+            var day = getDay(now.getDay());  // 요일
+            var fullDateStr = year + '.' + month + '.' + date + ' (' + day + ')'; //2025.03.07 (금)
+            document.getElementById('todayDate').textContent = fullDateStr;
 
-        const timerWrap = document.querySelector('.timerWrap');
-        
-        function updateTime() {
-            const now = new Date();
-            const formattedTime = now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            timerWrap.textContent = formattedTime;
-        }
+            const timerWrap = document.querySelector('.timerWrap');
 
-        setInterval(updateTime, 1000);
-        updateTime(); // Initial call to set the time immediately
+            function updateTime() {
+                const now = new Date();
+                const formattedTime = now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                timerWrap.textContent = formattedTime;
+            }
 
-        const checkinBtn = document.querySelector('[data-action="checkin"]');
-        const checkoutBtn = document.querySelector('[data-action="checkout"]');
+            setInterval(updateTime, 1000);
+            updateTime();
 
-        checkinBtn.addEventListener('click', function() {
-            checkinBtn.classList.add('hidden');
-            checkoutBtn.classList.remove('hidden');
-            
-            $.ajax({
-                url: '/startJob.ex',
-                type: 'POST',
-                data: {},
-                success: function(response) {
-                    console.log('Success:', response);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
+            const checkinBtn = document.querySelector('[data-action="checkin"]');
+            const checkoutBtn = document.querySelector('[data-action="checkout"]');
+
+            var startDt = '${startDt}';
+            var endDt = '${endDt}';
+
+            const checkinTxt = document.querySelector('.checkin .txt');
+            const checkoutTxt = document.querySelector('.checkout .txt');
+            const alterTimeBtn = document.querySelector('[data-action="alterTime"]');
+
+            checkinTxt.textContent = startDt ? startDt : '출근전';
+            checkoutTxt.textContent = endDt ? endDt : '퇴근전';
+
+            function initializeButtons() {
+                if (!startDt) {
+                    checkinBtn.classList.remove('hidden');
+                    checkoutBtn.classList.add('hidden');
+                    alterTimeBtn.classList.add('hidden');
+                } else if (startDt && !endDt) {
+                    checkinBtn.classList.add('hidden');
+                    checkoutBtn.classList.remove('hidden');
+                    alterTimeBtn.classList.add('hidden');
+                } else {
+                    checkinBtn.classList.add('hidden');
+                    checkoutBtn.classList.add('hidden');
+                    alterTimeBtn.classList.remove('hidden');
+                }
+            }
+
+            initializeButtons();
+
+            checkinBtn.addEventListener('click', function() {
+                if (!startDt) {
+                    checkinBtn.classList.add('hidden');
+                    checkoutBtn.classList.remove('hidden');
+
+                    $.ajax({
+                        url: '/startJob.ex',
+                        type: 'POST',
+                        data: {},
+                        success: function(response) {
+                        	location.reload();
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                        }
+                    });
+
+                    checkinTxt.textContent = '출근함';
+                    checkoutTxt.textContent = '퇴근전';
                 }
             });
+
+            checkoutBtn.addEventListener('click', function() {
+                if (!endDt) {
+                	console.log("1");
+                    checkinBtn.classList.remove('hidden');
+                    checkoutBtn.classList.add('hidden');
+                    checkinTxt.textContent = '출근전';
+                    checkoutTxt.textContent = '퇴근함';
+                }
+                
+                $.ajax({
+                    url: '/endJob.ex',
+                    type: 'POST',
+                    data: {},
+                    success: function(response) {
+                    	location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
             
-            document.querySelector('.checkin .txt').textContent = '출근함';
-            document.querySelector('.checkout .txt').textContent = '퇴근전';
+            alterTimeBtn.addEventListener('click', function() {
+                alert('인사담당자에게 문의하세요.');
+            });
         });
 
-        checkoutBtn.addEventListener('click', function() {
-            checkinBtn.classList.remove('hidden');
-            checkoutBtn.classList.add('hidden');
-            document.querySelector('.checkin .txt').textContent = '출근전';
-            document.querySelector('.checkout .txt').textContent = '퇴근함';
-        });
-    });
-    
-    function getDay(day) {
-        var dayStr;
-        switch (day) {
-            case 0:
-                dayStr = '일';
-                break;
-            case 1:
-                dayStr = '월';
-                break;
-            case 2:
-                dayStr = '화';
-                break;
-            case 3:
-                dayStr = '수';
-                break;
-            case 4:
-                dayStr = '목';
-                break;
-            case 5:
-                dayStr = '금';
-                break;
-            case 6:
-                dayStr = '토';
-                break;
+        function getDay(day) {
+            var dayStr;
+            switch (day) {
+                case 0:
+                    dayStr = '일';
+                    break;
+                case 1:
+                    dayStr = '월';
+                    break;
+                case 2:
+                    dayStr = '화';
+                    break;
+                case 3:
+                    dayStr = '수';
+                    break;
+                case 4:
+                    dayStr = '목';
+                    break;
+                case 5:
+                    dayStr = '금';
+                    break;
+                case 6:
+                    dayStr = '토';
+                    break;
+            }
+            return dayStr;
         }
-        return dayStr;
-    }
-</script>
+    </script>
 <body>
     <div class="widget-content padding-20 radius">
         <div class="widget-work counter text-left">
@@ -253,6 +296,16 @@
                     <div class="font-size-25">퇴근하기</div>
                     <span class="font-size-14">Have a Nice day</span>
                 </button>
+                
+			    <button data-action="alterTime" class="btn btn-sm btn-success btn-block hidden margin-top-10 text-left has-action btn-rotate-horizontal">
+			        <div class="circle-wrapper">
+			            <div class="icon text-success">
+			                <i class="fas fa-arrow-circle-right"></i>
+			            </div>
+			        </div>
+			        <div class="font-size-25">수정하기</div>
+			        <span class="font-size-14">Have a Nice day</span>
+			    </button>
             </div>
         </div>
     </div>

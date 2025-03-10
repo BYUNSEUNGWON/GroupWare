@@ -1,5 +1,7 @@
 package com.bsw.groupware.dashboard.service.impl;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +20,14 @@ public class DashBoardServiceImpl implements DashBoardService{
 	}
 
 	@Override
-	public String[] getSelctJob(String user) {
+	public Map getSelctJob(String user) {
 		
 		return dashBoardMapper.getSelctJob(user);
+	}
+
+	@Override
+	public void endJob(String user) {
+		dashBoardMapper.endJob(user);
 	}
 
 

@@ -13,4 +13,10 @@
     		AND DATE(START_DT) = CURDATE()
     		AND (END_DT IS NULL OR DATE(END_DT) = CURDATE())
     </select>
+    
+    <update id="endJob">
+    	UPDATE IA_HR_TN SET END_DT = NOW()
+    	WHERE USER_ID = #{user}
+    	 AND DATE(START_DT) = DATE(NOW())
+    </update>
 </mapper>
