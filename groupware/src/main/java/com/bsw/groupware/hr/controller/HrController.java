@@ -9,6 +9,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -83,16 +84,19 @@ public class HrController {
     }
     
     @PostMapping("/api/updateWorkTimes.ex")
-    public Map<String, Object> updateWorkTimes(@RequestBody Map<String, String> data) {
+    public ResponseEntity<?>  updateWorkTimes(HttpSession session, @RequestBody Map<String, String> data) {
         String startTime = data.get("startTime");
         String endTime = data.get("endTime");
-
+        String userId = (String) session.getAttribute("user");
+        
+        logger.debug("startTime :: {}", startTime);
+        logger.debug("endTime :: {}", endTime);
+        logger.debug("userId :: {}", userId);
+        
         // DB 업데이트 로직
-        boolean updateSuccess = hrService.updateWorkTimes(startTime, endTime);
+        boolean updateSuccess = hrService.updateWorkTimes(startTime, endTime, userId);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", updateSuccess);
-        return response;
+        return ResponseEntity.ok().build();
     }
 	
 }

@@ -19,7 +19,8 @@
     
     <update id="updateWorkTimes" parameterType="map">
         UPDATE IA_HR_TN
-        SET START_DT = #{startTime}, END_DT = #{endTime}
-        WHERE some_condition = #{someCondition}
+        	SET START_DT = #{startTime}, END_DT = #{endTime}
+        WHERE USER_ID = #{userId}
+        	AND DATE(START_DT) = DATE(#{startTime})
     </update>
 </mapper>

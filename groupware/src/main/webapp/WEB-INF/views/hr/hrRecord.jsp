@@ -8,10 +8,17 @@
     <title>HR Calendar</title>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/min/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+    <script src="https://unpkg.com/@fullcalendar/core@5.11.3/locales/ko.js"></script>
+    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,9 +75,10 @@
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+     <script>
+        $(document).ready(function () {
             const calendarEl = document.getElementById('calendar');
+
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'ko',
@@ -85,7 +93,7 @@
                         click: function() {
                             let totalHours = 0;
                             let totalMinutes = 0;
-                            
+
                             // .totalTime 클래스를 가진 모든 엘리먼트 선택
                             $('.totalTime').each(function() {
                                 let timeText = $(this).text().match(/(\d+)시간 (\d+)분/); // 시간과 분을 추출하는 정규식
@@ -94,11 +102,11 @@
                                     totalMinutes += parseInt(timeText[2]); // 분 누적
                                 }
                             });
-                            
+
                             // 총 분을 시간으로 변환
                             totalHours += Math.floor(totalMinutes / 60); 
                             totalMinutes = totalMinutes % 60; // 남은 분 계산
-                            
+
                             // 총 근무 시간 출력
                             alert('[합계] 총 근무 시간: ' + totalHours + '시간 ' + totalMinutes + '분');
                         }
@@ -106,14 +114,11 @@
                 },
                 events: function (fetchInfo, successCallback, failureCallback) {
                     const year = fetchInfo.start.getFullYear();
-                    console.log(`Extracted year: ${year}`);
-
                     $.ajax({
                         url: '/api/holidays',
                         type: 'GET',
                         data: { year: year },
                         success: function(response) {
-                            console.log('Fetched data:', response);
                             successCallback(response);
                         },
                         error: function(xhr, status, error) {
@@ -126,11 +131,29 @@
                     calendar.refetchEvents();
                 },
                 dateClick: function(info) {
-                	const dateStr = moment(info.date).format('YYYY-MM-DD');
-                    document.getElementById('modalStartTime').value = dateStr + ' 09:00:00';
-                    document.getElementById('modalEndTime').value = dateStr + ' 18:00:00';
-                    const start = moment(dateStr + ' 09:00:00');
-                    const end = moment(dateStr + ' 18:00:00');
+                    const dateStr = moment(info.date).format('YYYY-MM-DD');
+                    let startTime = moment(dateStr + ' 09:00:00');
+                    let endTime = moment(dateStr + ' 18:00:00');
+
+                    // 해당 날짜의 이벤트를 검색하여 출근/퇴근 시간을 업데이트
+                    let events = calendar.getEvents();
+                    for (let event of events) {
+                        if (moment(event.start).isSame(info.date, 'day')) {
+                            if (event.title === "Work Time") {
+                                startTime = moment(event.start);
+                                endTime = event.end ? moment(event.end) : moment(dateStr + ' 18:00:00');
+                                break;
+                            }
+                        }
+                    }
+
+                    // startTime과 endTime을 형식에 맞게 포맷팅
+                    document.getElementById('modalStartTime').value = startTime.format('YYYY-MM-DD HH:mm:ss');
+                    document.getElementById('modalEndTime').value = endTime.format('YYYY-MM-DD HH:mm:ss');
+
+                    const start = moment(startTime);
+                    const end = moment(endTime);
+
                     const duration = moment.duration(end.diff(start));
                     const hours = Math.floor(duration.asHours());
                     const minutes = duration.minutes();
@@ -138,12 +161,26 @@
 
                     const modal = new bootstrap.Modal(document.getElementById('detailModal'));
                     modal.show();
+
+                    // Flatpickr 초기화 
+                    flatpickr("#modalStartTime", {
+                        enableTime: true,
+                        dateFormat: "Y-m-d H:i:S",
+                        time_24hr: true,
+                        locale : "ko"
+                    });
+
+                    flatpickr("#modalEndTime", {
+                        enableTime: true,
+                        dateFormat: "Y-m-d H:i:S",
+                        time_24hr: true,
+                        locale : "ko"
+                    });
                 },
                 eventContent: function(arg) {
-                    if (!arg.event.allDay) { // 'Work Time' 이벤트만 렌더링
-                        let startDate = arg.event.start ? moment(arg.event.start).format("HH:mm:ss") : "";
-                        let endDate = arg.event.end ? moment(arg.event.end).format("HH:mm:ss") : "";
-
+                    if (!arg.event.allDay) {
+                        let startDate = arg.event.start ? moment(arg.event.start).format('HH:mm:ss') : "";
+                        let endDate = arg.event.end ? moment(arg.event.end).format('HH:mm:ss') : "";
                         if (startDate || endDate) {
                             let content = document.createElement('div');
                             let html = '<div class="event-title">' + arg.event.title + '</div>';
@@ -154,21 +191,19 @@
                                 let duration = moment.duration(end.diff(start));
                                 let hours = Math.floor(duration.asHours());
                                 let minutes = duration.minutes();
-                                
                                 html += '<div class="endTime"> [퇴근] : ' + endDate + '</div>';
-                                html += '<div class="totalTime"> [합계] : ' + hours + '시간 ' + minutes + '분</div>';
+                                html += '<div class="totalTime"> [합계] : ' + hours + '시간 ' + minutes + '</div>';
                             }
                             content.innerHTML = html;
                             return { domNodes: [content] };
                         }
-                    } else { // 공휴일 및 다른 이벤트 처리
+                    } else {
                         let content = document.createElement('div');
                         content.innerHTML = '<div class="event-title">' + arg.event.title + '</div>';
                         return { domNodes: [content] };
                     }
                 },
                 eventClassNames: function(arg) {
-                    // `Work Time` 이벤트가 있는 셀에 class 추가
                     if (arg.event.title === "Work Time") {
                         return ['has-event'];
                     }
@@ -179,40 +214,32 @@
                     }
                 }
             });
-         	// 모달의 시간 변경 내용 저장
+
             document.getElementById('saveChanges').addEventListener('click', function() {
                 const startTime = document.getElementById('modalStartTime').value;
                 const endTime = document.getElementById('modalEndTime').value;
-                const start = moment(startTime);
-                const end = moment(endTime);
-                const duration = moment.duration(end.diff(start));
-                const hours = Math.floor(duration.asHours());
-                const minutes = duration.minutes();
-                document.getElementById('modalTotalTime').value = hours + '시간 ' + minutes + '분';
-                
                 const data = {
-                        startTime: startTime,
-                        endTime: endTime,
-                    };
+                    startTime: startTime,
+                    endTime: endTime,
+                };
 
-                    $.ajax({
-                        url: '/api/updateWorkTimes.ex',
-                        type: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify(data),
-                        success: function(response) {
-                            alert('변경 내용이 저장되었습니다.');
-                            console.log('Update successful:', response);
-
-                            const modalElement = document.getElementById('detailModal');
-                            const modal = bootstrap.Modal.getInstance(modalElement);
-                            modal.hide();
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Update failed:', error);
-                        }
-                    });
+                $.ajax({
+                    url: '/api/updateWorkTimes.ex',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function(response) {
+                        alert('변경 내용이 저장되었습니다.');
+                        const modalElement = document.getElementById('detailModal');
+                        const modal = bootstrap.Modal.getInstance(modalElement);
+                        modal.hide();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Update failed:', error);
+                    }
                 });
+            });
+
             calendar.render();
         });
     </script>

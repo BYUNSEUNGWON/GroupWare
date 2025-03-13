@@ -14,5 +14,5 @@ public interface HrMapper {
 	
 	List<Map<String, Object>> getUserWorkTimes(Map<String, Object> params);
 
-	int updateWorkTimes(String startTime, String endTime);
+	int updateWorkTimes(String startTime, String endTime, String userId);
 }

@@ -9,7 +9,7 @@ public interface HrService {
 
 	List<Map<String, Object>> getUserWorkTimes(String user_id, int year);
 
-	boolean updateWorkTimes(String startTime, String endTime);
+	boolean updateWorkTimes(String startTime, String endTime, String userId);
 
 	
 	

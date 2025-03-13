@@ -29,8 +29,8 @@ public class HrServiceImpl implements HrService{
 	}
 
 	@Override
-	public boolean updateWorkTimes(String startTime, String endTime) {
-        return hrMapper.updateWorkTimes(startTime, endTime) > 0;
+	public boolean updateWorkTimes(String startTime, String endTime, String userId) {
+        return hrMapper.updateWorkTimes(startTime, endTime, userId) > 0;
 	}
 	
 
