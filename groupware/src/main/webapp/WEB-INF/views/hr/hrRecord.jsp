@@ -17,7 +17,20 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
-    <script src="https://unpkg.com/@fullcalendar/core@5.11.3/locales/ko.js"></script>
+    
+    
+    
+    
+
+    <!-- jQuery JS -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
+    
+    <!-- Moment.js -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
+    
+    <!-- FullCalendar JS -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.2/main.min.js'></script>
+    
     
     <style>
         body {
@@ -93,21 +106,27 @@
                         click: function() {
                             let totalHours = 0;
                             let totalMinutes = 0;
-
-                            // .totalTime 클래스를 가진 모든 엘리먼트 선택
                             $('.totalTime').each(function() {
-                                let timeText = $(this).text().match(/(\d+)시간 (\d+)분/); // 시간과 분을 추출하는 정규식
+                                let text = $(this).text().trim();
+
+                                // 전처리로 [합계] : 및 추가 공백 제거
+                                text = text.replace("[합계] :", "").trim();
+
+                                // 분 부분이 있는지 확인하기 위해 두 가지 경우를 처리
+                                let timeText = text.match(/(\d+)\s*시간\s*(\d*)\s*분?/);
+                                
                                 if (timeText) {
-                                    totalHours += parseInt(timeText[1]); // 시간 누적
-                                    totalMinutes += parseInt(timeText[2]); // 분 누적
+                                    const hours = parseInt(timeText[1]);
+                                    const minutes = parseInt(timeText[2] || "0"); // 분이 없는 경우 0으로 설정
+                                    totalHours += hours;
+                                    totalMinutes += minutes;
+                                } else {
+                                    console.warn("Format mismatch: ", text);
                                 }
                             });
+                            totalHours += Math.floor(totalMinutes / 60);
+                            totalMinutes = totalMinutes % 60;
 
-                            // 총 분을 시간으로 변환
-                            totalHours += Math.floor(totalMinutes / 60); 
-                            totalMinutes = totalMinutes % 60; // 남은 분 계산
-
-                            // 총 근무 시간 출력
                             alert('[합계] 총 근무 시간: ' + totalHours + '시간 ' + totalMinutes + '분');
                         }
                     }
@@ -166,15 +185,13 @@
                     flatpickr("#modalStartTime", {
                         enableTime: true,
                         dateFormat: "Y-m-d H:i:S",
-                        time_24hr: true,
-                        locale : "ko"
+                        time_24hr: true
                     });
 
                     flatpickr("#modalEndTime", {
                         enableTime: true,
                         dateFormat: "Y-m-d H:i:S",
-                        time_24hr: true,
-                        locale : "ko"
+                        time_24hr: true
                     });
                 },
                 eventContent: function(arg) {

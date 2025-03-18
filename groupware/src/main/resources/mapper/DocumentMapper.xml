@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bsw.groupware.mapper.DocumentMapper">
+    
+    <select id="getFormList" resultType="com.bsw.groupware.model.ApprovalFormVO">
+        SELECT 
+            FORM_ID as formId,
+            FORM_NM as formNm
+        FROM IA_DOC_FRM_TN
+    </select>
+    
+    <select id="getContents">
+        SELECT 
+        	CONTENTS
+        FROM 
+        	IA_DOC_FRM_TN 
+    	WHERE 
+    		FORM_ID = #{formId}
+    </select>
+    
+    <select id="getApprLine" resultType="com.bsw.groupware.model.UserVO">
+	    SELECT
+		    SEQ,
+		    CASE
+		        WHEN NAVER_USER = 1 THEN 'SSO(NAVER 사용자)'
+		        WHEN KAKAO_USER = 1 THEN 'SSO(KAKAO 사용자)'
+		        ELSE USER_ID
+		    END AS USER_ID,
+		    USER_PW as password,
+		    USER_NAME as name,
+		    USER_NICK as nickname,
+		    USER_DEPT as dept,
+		    USER_JOB_POSITION as position,
+		    EMAIL as email,
+		    PHONE as phone,
+		    NAVER_USER as naverUser,
+		    KAKAO_USER as kakaoUser,
+		    USER_IP,
+		    REGIST_DT,
+		    UPDT_DT
+		FROM IA_USER_TN
+		WHERE USER_DEPT = (SELECT USER_DEPT FROM IA_USER_TN WHERE USER_ID = #{userId})
+    </select>
+    
+</mapper>

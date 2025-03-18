@@ -261,20 +261,9 @@
         const approveBtn = document.querySelector('[data-action="approve"]');
         
         approveBtn.addEventListener('click', function() {
-            
-        	alert('asd');
 
-            /* $.ajax({
-                url: '/endJob.ex',
-                type: 'POST',
-                data: {},
-                success: function(response) {
-                  location.reload();
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                }
-            }); */
+            window.location.href = '/document.ex';
+
         });
     });
 

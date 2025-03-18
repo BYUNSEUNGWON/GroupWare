@@ -126,8 +126,8 @@
     <div class="login-container">
         <h2>로그인</h2>
         <form action='/doLogin.ex' method="post">
-            <input type="text" name="username" placeholder="아이디" required autocomplete="current-name">
-            <input type="password" name="password" placeholder="비밀번호" required autocomplete="current-password">
+            <input type="text" name="username" placeholder="아이디" required autocomplete="current-name" value="qwer">
+            <input type="password" name="password" placeholder="비밀번호" required autocomplete="current-password" value="Tmddnjs1!">
 			
         </form>
         
