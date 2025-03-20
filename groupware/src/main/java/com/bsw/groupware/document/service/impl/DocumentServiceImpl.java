@@ -1,6 +1,7 @@
 package com.bsw.groupware.document.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.text.Document;
 
@@ -14,7 +15,9 @@ import com.bsw.groupware.login.service.LoginService;
 import com.bsw.groupware.login.service.NaverService;
 import com.bsw.groupware.mapper.DocumentMapper;
 import com.bsw.groupware.mapper.LoginMapper;
+import com.bsw.groupware.model.ApprDocVO;
 import com.bsw.groupware.model.ApprovalFormVO;
+import com.bsw.groupware.model.FileMetadata;
 import com.bsw.groupware.model.UserVO;
 
 @Service
@@ -38,6 +41,22 @@ public class DocumentServiceImpl implements DocumentService{
 	public List<UserVO> getApprLine(String userId) {
 		return documentMapper.getApprLine(userId);
 	}
+
+	@Override
+	public void insertFile(FileMetadata fileMetadata) {
+		documentMapper.insertFile(fileMetadata);
+	}
+
+	@Override
+	public void submit(ApprDocVO apprDocVO) {
+		documentMapper.submit(apprDocVO);
+	}
+
+	@Override
+	public List<ApprDocVO> selectApprovalList(Map<String, Object> params) {
+	    return documentMapper.selectApprovalList(params);
+	}
+
 	
 
 }

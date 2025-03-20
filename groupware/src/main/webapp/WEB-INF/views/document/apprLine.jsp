@@ -41,7 +41,7 @@
             </thead>
             <tbody>
                 <c:forEach var="approver" items="${apprLine}">
-                    <tr onclick="selectApprover('${approver.name}')">
+                    <tr onclick="selectApprover('${approver.name}', '${approver.user_id}')">
                         <td>${approver.user_id}</td>
                         <td>${approver.name}</td>
                         <td>${approver.position}</td>
@@ -52,10 +52,10 @@
     </div>
 
     <script>
-        function selectApprover(name) {
+        function selectApprover(name, user_id) {
             // 부모 창으로 데이터 전달
             if (window.opener && !window.opener.closed) {
-                window.opener.setApprover(name);
+                window.opener.setApprover(name, user_id);
             }
             window.close();
         }

@@ -44,11 +44,15 @@
         padding: 15px;
     }
     .narrow-col {
-    width: 10%; /* 원하는 너비를 설정합니다 */
-	}
-	.wide-col {
-	    width: 40%; /* 원하는 너비를 설정합니다 */
-	}
+        width: 10%; /* 원하는 너비를 설정합니다 */
+    }
+    .wide-col {
+        width: 40%; /* 원하는 너비를 설정합니다 */
+    }
+    table tr:hover {
+        background-color: #f1f1f1; /* 배경색 변경 */
+        cursor: pointer; /* 커서 스타일 변경 */
+    }
 </style>
 </head>
 <body>
@@ -57,42 +61,106 @@
         <%@ include file="../common/header.jsp" %>
     </div>
 
-        <%@ include file="../common/approvalMenu.jsp" %>
-        
-        <div class="content">
-            <h2 class="text-primary">결재하기</h2>
-            <table class="table table-striped table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>No</th>
-                        <th class="narrow-col">상신자명</th>
-                        <th class="wide-col">제목</th>
-                        <th>상신일시</th>
-                        <th>문서번호</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:choose>
-                        <c:when test="${not empty documents}">
-                            <c:forEach var="doc" items="${documents}">
-                                <tr>
-                                    <td>${doc.no}</td>
-                                    <td class="narrow-col">${doc.registUserId}</td>
-                                    <td class="wide-col">${doc.subject}</td>
-                                    <td>${doc.registDt}</td>
-                                    <td>${doc.apprDocNo}</td>
-                                </tr>
-                            </c:forEach>
-                        </c:when>
-                        <c:otherwise>
-                            <tr>
-                                <td colspan="5">데이터가 없습니다.</td>
+    <%@ include file="../common/approvalMenu.jsp" %>
+
+    <c:if test="${not empty result}">
+        <script type="text/javascript">
+            alert("${result}");
+            window.close();
+        </script>
+    </c:if>
+
+    <div class="content">
+        <h2 class="text-primary">결재하기</h2>
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>NO.</th>
+                    <th class="narrow-col">상신자명</th>
+                    <th class="wide-col">제목</th>
+                    <th>문서번호</th>
+                    <th>상신일시</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:choose>
+                    <c:when test="${not empty approvalList}">
+                        <c:forEach var="doc" items="${approvalList}" varStatus="status">
+                            <tr>                           
+                                <td>${status.index + 1}</td>
+                                <td class="narrow-col">${doc.submitter}</td>
+                                <td class="wide-col">${doc.subject}</td>
+                                <td>${doc.documentNo}</td>
+                                <td>${doc.registDt}</td>
                             </tr>
-                        </c:otherwise>
-                    </c:choose>
-                </tbody>
-            </table>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <tr>
+                            <td colspan="5">결재대기문서가 없습니다.</td>
+                        </tr>
+                    </c:otherwise>
+                </c:choose>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 모달 -->
+    <div class="modal fade" id="approvalModal" tabindex="-1" aria-labelledby="approvalModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="approvalModalLabel">결재문서 내용</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>상신자명</strong>: <span id="modalSubmitter"></span></p>
+                    <p><strong>제목</strong>: <span id="modalSubject"></span></p>
+                    <p><strong>첨부파일</strong>: <span id="modalFileId"></span></p>
+                    <p><strong>본문</strong>: <span id="modalContents"></span></p>
+                    <p><strong>요청코멘트</strong>: <span id="modalComment"></span></p>
+                    <p><strong>요청일시</strong>: <span id="modalRegistDt"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary">승인</button>
+                    <button type="button" class="btn btn-danger">반려</button>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        // 각 테이블 행에 클릭 이벤트 리스너 추가
+        var rows = document.querySelectorAll('table tbody tr');
+        rows.forEach(function(row) {
+            row.addEventListener('click', function() {
+                var documentNo = this.cells[3].innerText;
+                var approvalModal = new bootstrap.Modal(document.getElementById('approvalModal'));
+                approvalModal.show();
+                
+                $.ajax({
+                    url: '/detail.ex',
+                    type: 'POST',
+                    data: { documentNo: documentNo },
+                    success: function(response) {
+                        document.getElementById('modalSubmitter').innerText = response.submitter;
+                        document.getElementById('modalSubject').innerText = response.subject;
+                        document.getElementById('modalFileId').innerText = response.fileId;
+                        document.getElementById('modalContents').innerText = response.contents;
+                        document.getElementById('modalComment').innerText = response.comment;
+                        document.getElementById('modalRegistDt').innerText = response.registDt;
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    });
+    </script>
 </body>
 </html>

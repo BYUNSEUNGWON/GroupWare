@@ -43,4 +43,62 @@
 		WHERE USER_DEPT = (SELECT USER_DEPT FROM IA_USER_TN WHERE USER_ID = #{userId})
     </select>
     
+    <insert id="insertFile">
+    	INSERT INTO FILE_METADATA(FILE_ID, ORIGINAL_FILENAME, STORED_FILENAME, UPLOAD_DATE, SUBMITTER_ID, FILE_PATH)
+        VALUES (#{fileId}, #{originalFilename}, #{storedFilename}, #{uploadDate}, #{submitterId}, #{filePath})
+    </insert>
+    
+    <insert id="submit">
+    	INSERT INTO IA_APPR_DOC_TN(
+								    SUBMITTER,
+								    SUBMITTER_ID,
+								    APPROVER,
+								    APPROVER_ID,
+								    SUBJECT,
+								    RESULT_STATUS,
+								    DOCUMENT_NO,
+								    FILE_ID,
+								    CONTENTS,
+								    COMMENT,
+								    REGIST_USER_ID,
+								    REGIST_DT
+								) VALUES (
+								    #{submitter},
+								    #{submitter_id},
+								    #{approver},
+								    #{approver_id},
+								    #{subject},
+								    #{result_status},
+								    #{document_no},
+								    #{file_id},
+								    #{contents},
+								    #{comment},
+								    #{submitter_id},
+								    NOW()
+								);
+    </insert>
+    
+	<select id="selectApprovalList" parameterType="map" resultType="com.bsw.groupware.model.ApprDocVO">
+	    SELECT 
+	        SUBMITTER AS submitter, 
+	        SUBMITTER_ID AS submitterId, 
+	        APPROVER AS approver, 
+	        APPROVER_ID AS approverId, 
+	        SUBJECT AS subject, 
+	        RESULT_STATUS AS resultStatus, 
+	        DOCUMENT_NO AS documentNo, 
+	        FILE_ID AS fileId, 
+	        CONTENTS AS contents, 
+	        COMMENT AS comment, 
+	        APPROVER_COMMENT AS approverComment, 
+	        REGIST_DT AS registDt
+	    FROM IA_APPR_DOC_TN
+	    WHERE 1=1
+	    <if test="action == 'approval'">
+	        AND RESULT_STATUS = 'submit'
+	        AND APPROVER_ID = #{user}
+	    </if>
+	    ORDER BY REGIST_DT DESC
+	</select>
+    
 </mapper>

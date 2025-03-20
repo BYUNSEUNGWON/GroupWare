@@ -119,6 +119,7 @@
     
     function submit(formId){
         window.open('/submit.ex?formId=' + formId, 'PopupWindow', 'width=1500,height=1000,scrollbars=yes');
+        closeNewDoc();
     }
 </script>
 <body>
