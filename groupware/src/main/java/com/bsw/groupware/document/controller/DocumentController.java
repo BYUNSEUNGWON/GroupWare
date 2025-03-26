@@ -1,8 +1,13 @@
 package com.bsw.groupware.document.controller;
 
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -38,9 +43,12 @@ import com.bsw.groupware.document.service.DocumentService;
 import com.bsw.groupware.mapper.LoginMapper;
 import com.bsw.groupware.model.ApprDocVO;
 import com.bsw.groupware.model.ApprovalFormVO;
+import com.bsw.groupware.model.CryptoUtils;
+import com.bsw.groupware.model.EncoderDecoderUtils;
 import com.bsw.groupware.model.FileMetadata;
 import com.bsw.groupware.model.UserVO;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
@@ -84,6 +92,27 @@ public class DocumentController {
 	    
 		return "/document/approvalList";
 	}
+	
+	@RequestMapping("/approvedDocuments.ex")
+	public String approvedList(HttpSession session, Model model, @RequestParam(value = "result", required = false) String result) {
+	    String user = (String) session.getAttribute("user");
+	  
+	    
+	    logger.debug("user value :: {}", user);
+	    logger.debug("result value :: {}", result);
+	    
+	    // 결재대기문서 리스트 출력
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("user", user);
+	    params.put("action", "approved");
+	    
+	    List<ApprDocVO> approvalList = documentService.selectApprovalList(params);
+	    
+	    model.addAttribute("approvalList", approvalList);
+	    
+		return "/document/approvedList";
+	}
+
 	
     @PostMapping("/getApprovalForms.ex")
     public ResponseEntity<List<ApprovalFormVO>> ApprovalForms() throws Exception {
@@ -197,7 +226,7 @@ public class DocumentController {
         try {
             documentService.submit(apprDocVO);	
 		} catch (Exception e) {
-			logger.error("document submit error :: {}", e.getMessage());
+			logger.error("document submit error", e);
 			redirectAttributes.addAttribute("message", "제출 실패");
 		}
         //결재문서저장 종료
@@ -252,4 +281,88 @@ public class DocumentController {
         return "redirect:/document.ex";
     }
     
+    @RequestMapping("/document/detail.ex")
+    public String detail(HttpSession session, Model model, @RequestParam("documentNo") String documentNo, @RequestParam("action") String action) {
+    	logger.debug("document value :: {}", documentNo);
+    	
+    	ApprDocVO apprDocVo = documentService.getDetailContents(documentNo);
+    	
+    	List<FileMetadata> fileMetadatas= documentService.getFileData(apprDocVo.getFileId());
+    	
+        if (fileMetadatas != null) {
+            for (FileMetadata fileMetadata : fileMetadatas) {
+                String encryptedFileId;
+				try {
+					encryptedFileId = CryptoUtils.encrypt(fileMetadata.getFileId());
+	                fileMetadata.setFileId(encryptedFileId); // 암호화된 파일 ID로 설정
+				} catch (Exception e) {
+	                logger.error("Error encrypting file ID", e);
+				}
+                logger.debug("File Metadata - Original Filename: {}, File Path: {}", fileMetadata.getOriginalFilename(), fileMetadata.getFilePath());
+            }
+        } else {
+            logger.debug("No file metadata found for file ID: {}", apprDocVo.getFileId());
+        }
+        
+        model.addAttribute("fileMetadatas", fileMetadatas);
+    	model.addAttribute("document", apprDocVo);
+    	model.addAttribute("action", action);
+    	
+        return "/document/detail";
+    }
+    
+    @RequestMapping("/downloadFile.ex")
+    public void downloadFile(@RequestParam("fileId") String encryptedFileId, @RequestParam("fileNm") String fileNm, HttpServletResponse response) throws IOException {
+    	logger.debug("encryptedFileId value :: {}", encryptedFileId);
+        try {
+        	
+            // 공백을 +로 치환
+            String adjustedFileId = encryptedFileId.replace(' ', '+');
+            logger.debug("Adjusted encryptedFileId value :: {}", adjustedFileId);
+
+            // 복호화
+            String decryptedFileId = CryptoUtils.decrypt(adjustedFileId);
+            logger.debug("Decrypted fileId value :: {}", decryptedFileId);
+
+            FileMetadata fileMetadata = documentService.getFileDataById(decryptedFileId, fileNm);
+            
+            if (fileMetadata != null) {
+                File file = new File(fileMetadata.getFilePath());
+                if (file.exists()) {
+                    response.setContentType("application/octet-stream");
+                    response.setContentLength((int) file.length());
+                    response.setHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(fileMetadata.getOriginalFilename(), "UTF-8") + "\"");
+
+                    try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+                         BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream())) {
+                        byte[] buffer = new byte[8192];
+                        int bytesRead;
+                        while ((bytesRead = in.read(buffer)) != -1) {
+                            out.write(buffer, 0, bytesRead);
+                        }
+                    }
+                } else {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "File not found on the server");
+                }
+            } else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "File metadata not found");
+            }
+        } catch (Exception e) {
+            logger.error("Failed to decrypt file ID or download file", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to decrypt file ID");
+        }
+    }
+    
+    @RequestMapping("/approved.ex")
+    public ResponseEntity<?> approved(@RequestParam("documentNo") String documentNo, @RequestParam("approverComment") String comment) {
+    	documentService.updtDocument(documentNo, comment, "approved");
+        return ResponseEntity.ok().build();
+    }
+    
+    @RequestMapping("/returned.ex")
+    public ResponseEntity<?> returned(@RequestParam("documentNo") String documentNo, @RequestParam("approverComment") String comment) {
+    	documentService.updtDocument(documentNo, comment, "returened");
+        return ResponseEntity.ok().build();
+    }
+
 }

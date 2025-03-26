@@ -64,16 +64,16 @@
 								    REGIST_DT
 								) VALUES (
 								    #{submitter},
-								    #{submitter_id},
+								    #{submitterId},
 								    #{approver},
-								    #{approver_id},
+								    #{approverId},
 								    #{subject},
-								    #{result_status},
-								    #{document_no},
-								    #{file_id},
+								    #{resultStatus},
+								    #{documentNo},
+								    #{fileId},
 								    #{contents},
 								    #{comment},
-								    #{submitter_id},
+								    #{submitterId},
 								    NOW()
 								);
     </insert>
@@ -98,7 +98,63 @@
 	        AND RESULT_STATUS = 'submit'
 	        AND APPROVER_ID = #{user}
 	    </if>
+	    <if test="action == 'approved'">
+	        AND RESULT_STATUS = 'approved'
+	        AND SUBMITTER_ID = #{user}
+	    </if>
 	    ORDER BY REGIST_DT DESC
 	</select>
+	
+	    
+    <select id="getDetailContents" resultType="com.bsw.groupware.model.ApprDocVO">
+	    SELECT 
+	        SUBMITTER AS submitter, 
+	        SUBMITTER_ID AS submitterId, 
+	        APPROVER AS approver, 
+	        APPROVER_ID AS approverId, 
+	        SUBJECT AS subject, 
+	        RESULT_STATUS AS resultStatus, 
+	        DOCUMENT_NO AS documentNo, 
+	        FILE_ID AS fileId, 
+	        CONTENTS AS contents, 
+	        COMMENT AS comment, 
+	        APPROVER_COMMENT AS approverComment, 
+	        REGIST_DT AS registDt
+	    FROM IA_APPR_DOC_TN
+    	WHERE 
+    		DOCUMENT_NO = #{documentNo}
+    </select>
+    
+    <select id="getFileData" resultType="com.bsw.groupware.model.FileMetadata">
+    
+    	SELECT 	file_id as fileId,
+			    original_filename as originalFilename,
+			    stored_filename as storedFilename,
+			    upload_date as uploadDate,
+			    submitter_id as submitterId,
+			    file_path as filePath
+			FROM file_metadata
+		WHERE FILE_ID = #{fileId};
+    
+    </select>
+    
+    <select id="getFileDataById" resultType="com.bsw.groupware.model.FileMetadata">
+    	SELECT 	file_id as fileId,
+			    original_filename as originalFilename,
+			    stored_filename as storedFilename,
+			    upload_date as uploadDate,
+			    submitter_id as submitterId,
+			    file_path as filePath
+			FROM file_metadata
+		WHERE FILE_ID = #{fileId}
+		AND original_filename = #{fileNm};
+    </select>
+    
+    <update id="updtDocument">
+    	UPDATE IA_APPR_DOC_TN
+    	SET APPROVER_COMMENT = #{comment},
+    		RESULT_STATUS = #{resultStatus}
+   		WHERE DOCUMENT_NO = #{documentNo}
+    </update>
     
 </mapper>

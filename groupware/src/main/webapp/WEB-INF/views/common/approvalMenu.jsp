@@ -131,7 +131,7 @@
                     <button class="btn btn-outline-primary" onclick="openNewDoc()">상신하기</button>
                 </li>
                 <li class="nav-item">
-                    <button class="btn btn-outline-primary" onclick="window.location.href='/approveDocuments.ex'">결재하기</button>
+                    <button class="btn btn-outline-primary" onclick="window.location.href='/document.ex'">결재하기</button>
                 </li>
                 <li class="nav-item">
                     <button class="btn btn-outline-primary" onclick="window.location.href='/approvedDocuments.ex'">결재완료</button>

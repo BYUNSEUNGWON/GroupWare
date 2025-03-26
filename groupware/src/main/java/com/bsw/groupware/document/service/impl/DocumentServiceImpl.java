@@ -57,6 +57,25 @@ public class DocumentServiceImpl implements DocumentService{
 	    return documentMapper.selectApprovalList(params);
 	}
 
-	
+	@Override
+	public ApprDocVO getDetailContents(String documentNo) {
+		return documentMapper.getDetailContents(documentNo);
+	}
+
+	@Override
+	public List<FileMetadata> getFileData(String fileId) {
+		return documentMapper.getFileData(fileId);
+	}
+
+	@Override
+	public FileMetadata getFileDataById(String fileId, String fileNm) {
+		return documentMapper.getFileDataById(fileId, fileNm);
+	}
+
+	@Override
+	public void updtDocument(String documentNo, String comment, String resultStatus) {
+		documentMapper.updtDocument(documentNo, comment, resultStatus);
+	}
+
 
 }

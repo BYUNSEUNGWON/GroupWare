@@ -22,5 +22,12 @@ public interface DocumentService {
 	void submit(ApprDocVO apprDocVO);
 
 	List<ApprDocVO> selectApprovalList(Map<String, Object> params);
+
+	ApprDocVO getDetailContents(String documentNo);
+
+	List<FileMetadata> getFileData(String fileId);
 	
+	FileMetadata getFileDataById(String fileId, String fileNm);
+
+	void updtDocument(String documentNo, String comment, String resultStatus);
 }

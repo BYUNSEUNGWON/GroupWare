@@ -63,15 +63,8 @@
 
     <%@ include file="../common/approvalMenu.jsp" %>
 
-    <c:if test="${not empty result}">
-        <script type="text/javascript">
-            alert("${result}");
-            window.close();
-        </script>
-    </c:if>
-
     <div class="content">
-        <h2 class="text-primary">결재하기</h2>
+        <h2 class="text-primary">결재완료</h2>
         <table class="table table-striped table-hover">
             <thead class="table-dark">
                 <tr>
@@ -140,7 +133,7 @@
         rows.forEach(function(row) {
             row.addEventListener('click', function() {
                 var documentNo = this.cells[3].innerText;
-                var url = '/document/detail.ex?documentNo=' + documentNo + '&action=approval';
+                var url = '/document/detail.ex?documentNo=' + documentNo + '&action=approved';
                 window.open(url, '_blank');
             });
         });
