@@ -253,7 +253,7 @@
         });
 
         alterTimeBtn.addEventListener('click', function() {
-            alert('인사담당자에게 문의하세요.');
+            window.location.href = '/hrList.ex';
         });
         
         
