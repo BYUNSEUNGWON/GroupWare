@@ -30,4 +30,8 @@ public interface DocumentService {
 	FileMetadata getFileDataById(String fileId, String fileNm);
 
 	void updtDocument(String documentNo, String comment, String resultStatus);
+
+	int countApprovalList(Map<String, Object> params);
+
+	int countByStatus(Map<String, Object> params, String status);
 }

@@ -70,7 +70,9 @@ public class DocumentController {
 
 	
 	@RequestMapping("/document.ex")
-	public String approveList(HttpSession session, Model model, @RequestParam(value = "result", required = false) String result) {
+	public String approveList(HttpSession session, Model model, @RequestParam(value = "result", required = false) String result,
+															    @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+															    @RequestParam(value = "itemsPerPage", defaultValue = "10") int itemsPerPage) {
 	    String user = (String) session.getAttribute("user");
 	    
 	    if(result != null || result != "") {
@@ -84,17 +86,30 @@ public class DocumentController {
 	    Map<String, Object> params = new HashMap<>();
 	    params.put("user", user);
 	    params.put("action", "approval");
+	    params.put("offset", (currentPage - 1) * itemsPerPage);
+	    params.put("limit", itemsPerPage);
+
+	    int totalDocs = documentService.countApprovalList(params);
+
+	    model.addAttribute("currentPage", currentPage);
+	    model.addAttribute("itemsPerPage", itemsPerPage);
+	    model.addAttribute("totalPages", (int) Math.ceil((double) totalDocs / itemsPerPage));
 	    
 	    List<ApprDocVO> approvalList = documentService.selectApprovalList(params);
-	    
-	    model.addAttribute("approvalList", approvalList);
 
+	    model.addAttribute("approvalList", approvalList);
+	    
+	    logger.debug("currentPage :: {}", currentPage);
+	    logger.debug("itemsPerPage :: {}", itemsPerPage);
+	    logger.debug("totalPages :: {}", (int) Math.ceil((double) totalDocs / itemsPerPage));
 	    
 		return "/document/approvalList";
 	}
 	
 	@RequestMapping("/approvedDocuments.ex")
-	public String approvedList(HttpSession session, Model model, @RequestParam(value = "result", required = false) String result) {
+	public String approvedList(HttpSession session, Model model, @RequestParam(value = "result", required = false) String result, 
+																 @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+																 @RequestParam(value = "itemsPerPage", defaultValue = "10") int itemsPerPage) {
 	    String user = (String) session.getAttribute("user");
 	  
 	    
@@ -105,15 +120,115 @@ public class DocumentController {
 	    Map<String, Object> params = new HashMap<>();
 	    params.put("user", user);
 	    params.put("action", "approved");
+	    params.put("offset", (currentPage - 1) * itemsPerPage);
+	    params.put("limit", itemsPerPage);
+
+	    int totalDocs = documentService.countApprovalList(params);
+
+	    model.addAttribute("currentPage", currentPage);
+	    model.addAttribute("itemsPerPage", itemsPerPage);
+	    model.addAttribute("totalPages", (int) Math.ceil((double) totalDocs / itemsPerPage));
 	    
 	    List<ApprDocVO> approvalList = documentService.selectApprovalList(params);
 	    
 	    model.addAttribute("approvalList", approvalList);
+	    model.addAttribute("action", "approved");
+	    
+		return "/document/approvedList";
+	}
+	
+	@RequestMapping("/returendDocuments.ex")
+	public String returendList(HttpSession session, Model model, @RequestParam(value = "result", required = false) String result,
+																 @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+																 @RequestParam(value = "itemsPerPage", defaultValue = "10") int itemsPerPage) {
+	    String user = (String) session.getAttribute("user");
+	  
+	    
+	    logger.debug("user value :: {}", user);
+	    logger.debug("result value :: {}", result);
+	    
+	    // 결재대기문서 리스트 출력
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("user", user);
+	    params.put("action", "returend");
+	    params.put("offset", (currentPage - 1) * itemsPerPage);
+	    params.put("limit", itemsPerPage);
+
+	    int totalDocs = documentService.countApprovalList(params);
+
+	    model.addAttribute("currentPage", currentPage);
+	    model.addAttribute("itemsPerPage", itemsPerPage);
+	    model.addAttribute("totalPages", (int) Math.ceil((double) totalDocs / itemsPerPage));
+	    
+	    List<ApprDocVO> approvalList = documentService.selectApprovalList(params);
+	    
+	    model.addAttribute("approvalList", approvalList);
+	    model.addAttribute("action", "returend");
+	    
+		return "/document/approvedList";
+	}
+	
+	@RequestMapping("/canceledDocuments.ex")
+	public String cancelList(HttpSession session, Model model, @RequestParam(value = "result", required = false) String result,
+															   @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+															   @RequestParam(value = "itemsPerPage", defaultValue = "10") int itemsPerPage) {
+	    String user = (String) session.getAttribute("user");
+	  
+	    
+	    logger.debug("user value :: {}", user);
+	    logger.debug("result value :: {}", result);
+	    
+	    // 결재대기문서 리스트 출력
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("user", user);
+	    params.put("action", "cancel");
+	    params.put("offset", (currentPage - 1) * itemsPerPage);
+	    params.put("limit", itemsPerPage);
+
+	    int totalDocs = documentService.countApprovalList(params);
+
+	    model.addAttribute("currentPage", currentPage);
+	    model.addAttribute("itemsPerPage", itemsPerPage);
+	    model.addAttribute("totalPages", (int) Math.ceil((double) totalDocs / itemsPerPage));
+	    
+	    List<ApprDocVO> approvalList = documentService.selectApprovalList(params);
+	    
+	    model.addAttribute("approvalList", approvalList);
+	    model.addAttribute("action", "cancel");
 	    
 		return "/document/approvedList";
 	}
 
-	
+	@RequestMapping("/proceedDocuments.ex")
+	public String proceedList(HttpSession session, Model model, @RequestParam(value = "result", required = false) String result,
+																@RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+																@RequestParam(value = "itemsPerPage", defaultValue = "10") int itemsPerPage) {
+	    String user = (String) session.getAttribute("user");
+	  
+	    logger.debug("user value :: {}", user);
+	    logger.debug("result value :: {}", result);
+	    
+	    // 결재대기문서 리스트 출력
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("user", user);
+	    params.put("action", "proceed");
+	    params.put("offset", (currentPage - 1) * itemsPerPage);
+	    params.put("limit", itemsPerPage);
+
+	    int totalDocs = documentService.countApprovalList(params);
+
+	    model.addAttribute("currentPage", currentPage);
+	    model.addAttribute("itemsPerPage", itemsPerPage);
+	    model.addAttribute("totalPages", (int) Math.ceil((double) totalDocs / itemsPerPage));
+	    
+	    List<ApprDocVO> approvalList = documentService.selectApprovalList(params);
+	    
+	    model.addAttribute("approvalList", approvalList);
+	    model.addAttribute("action", "proceed");
+	    
+		return "/document/approvedList";
+	}
+
     @PostMapping("/getApprovalForms.ex")
     public ResponseEntity<List<ApprovalFormVO>> ApprovalForms() throws Exception {
         try {
@@ -364,5 +479,11 @@ public class DocumentController {
     	documentService.updtDocument(documentNo, comment, "returened");
         return ResponseEntity.ok().build();
     }
-
+    
+    @RequestMapping("/canceld.ex")
+    public ResponseEntity<?> canceld(@RequestParam("documentNo") String documentNo,  @RequestParam("approverComment") String comment) {
+    	comment = "상신자 취소처리";
+    	documentService.updtDocument(documentNo, comment, "cancel");
+        return ResponseEntity.ok().build();
+    }
 }

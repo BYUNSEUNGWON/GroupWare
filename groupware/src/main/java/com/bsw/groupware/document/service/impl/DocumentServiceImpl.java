@@ -77,5 +77,16 @@ public class DocumentServiceImpl implements DocumentService{
 		documentMapper.updtDocument(documentNo, comment, resultStatus);
 	}
 
+	@Override
+	public int countApprovalList(Map<String, Object> params) {
+		return documentMapper.countApprovalList(params);
+	}
+
+	@Override
+	public int countByStatus(Map<String, Object> params, String status) {
+		params.put("action", status);
+	    return documentMapper.countByStatus(params);
+	}
+
 
 }

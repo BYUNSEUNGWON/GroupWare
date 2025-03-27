@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="../common/header.jsp" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -361,7 +362,6 @@
                 <div class="counter counter-lg padding-vertical-35 padding-horizontal-20">                        
                     <div class="counter-label font-size-15">
                     	<span class="font-size-15">전자결재</span>
-                        <span class="font-size-13">&nbsp;&nbsp;※일주일 기준※</span>
                     </div>
                     <div class="approval-section">
                         <div class="approval">
@@ -369,28 +369,28 @@
                             <span id="approvalDoc" class="txt font-weight-700 grey-700">건</span>
                         </div>
                     </div>
+					<div class="approval-section">
+                        <div class="approval">
+                            <span class="grey-500">결재완료 : </span>
+                            <span id="approvedDoc" class="txt font-weight-700 grey-700">건</span>
+                        </div>
+                     </div>
                     <div class="approval-section">
                         <div class="approval">
                             <span class="grey-500">결재진행 : </span>
-                            <span id="approvalDoc" class="txt font-weight-700 grey-700">건</span>
+                            <span id="proceedDoc" class="txt font-weight-700 grey-700">건</span>
                         </div>
 					</div>
 					<div class="approval-section">
                         <div class="approval">
-                            <span class="grey-500">결재완료 : </span>
-                            <span id="approvalDoc" class="txt font-weight-700 grey-700">건</span>
-                        </div>
-                     </div>
-					<div class="approval-section">
-                        <div class="approval">
                             <span class="grey-500">결재반려 : </span>
-                            <span id="approvalDoc" class="txt font-weight-700 grey-700">건</span>
+                            <span id="returendDoc" class="txt font-weight-700 grey-700">건</span>
                         </div>
                      </div>
                      <div class="approval-section">
                         <div class="approval">
                             <span class="grey-500">결재취소 : </span>
-                            <span id="approvalDoc" class="txt font-weight-700 grey-700">건</span>
+                            <span id="cancelDoc" class="txt font-weight-700 grey-700">건</span>
                         </div>
                      </div>
                     </div>
@@ -408,45 +408,35 @@
                     </button>
                 </div>
             </div>
-        </div>
         <!-- 세 번째 추가 박스 -->
-        <!-- 
+        
         <div class="widget-content padding-20 radius">
             <div class="widget-work counter text-left">
                 <div class="counter counter-lg padding-vertical-35 padding-horizontal-20">                        
                     <div class="counter-label font-size-15">
-                        기타
+                        Korea IT
                     </div>
                     <div class="other-section">
-                        <div class="other">
-                            <span class="grey-500">기타 정보 : </span>
-                            <span id="otherInfo" class="txt font-weight-700 grey-700">내용 없음</span>
-                        </div>
+                    <div class="other">
+                        <span class="grey-500">실시간 뉴스</span>
                     </div>
-                </div>
-                <div class="margin-top-15">
-                    <button data-action="actionOne" class="btn btn-sm btn-primary btn-block margin-top-10 text-left has-action btn-rotate-horizontal">
-                        <div class="circle-wrapper">
-                            <div class="icon text-primary">
-                                <i class="fas fa-arrow-circle-right"></i>
-                            </div>
-                        </div>
-                        <div class="font-size-25">기타 작업</div>
-                        <span class="font-size-14">기타 작업 수행</span>
-                    </button>
-                    <button data-action="actionTwo" class="btn btn-sm btn-success btn-block hidden margin-top-10 text-left has-action btn-rotate-horizontal">
-                        <div class="circle-wrapper">
-                            <div class="icon text-success">
-                                <i class="fas fa-arrow-circle-right"></i>
-                            </div>
-                        </div>
-                        <div class="font-size-25">기타 작업 2</div>
-                        <span class="font-size-14">기타 작업 2 수행</span>
-                    </button>
+                    <div class="news-section">
+                        <ul class="list-unstyled">
+                            <c:forEach var="article" items="${articles}">
+                                <li>
+                                    <a href="${article.link}" target="_blank" class="news-link">
+                                        ${article.title}
+                                    </a>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </div>
+                    </div>
                 </div>
             </div>
         </div>
-        
+        </div>
+        <!-- 
         <div class="widget-content padding-20 radius">
             <div class="widget-work counter text-left">
                 <div class="counter counter-lg padding-vertical-35 padding-horizontal-20">                        
@@ -555,5 +545,31 @@
             </div>
         </div>-->
     </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // AJAX 요청을 보내고 결과를 처리하는 함수
+            function fetchDocumentCounts() {
+                $.ajax({
+                    url: '/dashboard/counts.ex',
+                    method: 'GET',
+                    success: function(response) {
+                        $("#approvalDoc").text(response.approval + ' 건');
+                        $("#approvedDoc").text(response.approved + ' 건');
+                        $("#proceedDoc").text(response.proceed + ' 건');
+                        $("#returendDoc").text(response.returned + ' 건');
+                        $("#cancelDoc").text(response.cancel + ' 건');
+                    },
+                    error: function(error) {
+                        console.error("Error fetching document counts:", error);
+                    }
+                });
+            }
+
+            // 페이지 로드 시 문서 카운트 가져오기
+            fetchDocumentCounts();
+        });
+    </script>
 </body>
 </html>

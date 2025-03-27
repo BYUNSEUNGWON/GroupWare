@@ -74,7 +74,11 @@
     </div>
     
     <c:choose>
-        <c:when test="${action != 'approved'}">
+        <c:when test="${action == 'proceed'}">
+            <button type="button" class="btn btn-danger" onclick="cancelDocument()">취소</button>
+            <button type="button" class="btn btn-secondary" onclick="window.close()">닫기</button>
+        </c:when>
+        <c:when test="${action == 'approval'}">
             <button type="button" class="btn btn-primary" onclick="approveDocument()">승인</button>
             <button type="button" class="btn btn-danger" onclick="rejectDocument()">반려</button>
         </c:when>
@@ -86,6 +90,33 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 추가 -->
 <script>
+
+	function cancelDocument(){
+		if(confirm("취소처리하시겠습니까?")){
+			var approverComment = $('#approverComment').val();
+		    var documentNo = "${document.documentNo}";
+		    
+		    $.ajax({
+		        url: '<c:url value="/canceld.ex"/>',
+		        method: 'POST',
+		        data: {
+		            documentNo: documentNo,
+		            approverComment: approverComment
+		        },
+		        success: function(response) {
+		            alert('문서가 취소되었습니다.');                
+		            if (window.opener) {
+	                    window.opener.location.reload();
+	                }
+		            window.close();
+		        },
+		        error: function(xhr, status, error) {
+		            alert('문서 취소 중 오류가 발생했습니다. 오류 코드: ' + xhr.status + ', 메시지: ' + error);
+		        }
+		    });	
+		}
+	}
+
 	function approveDocument() {
 		if(confirm("승인처리하시겠습니까?")){
 			var approverComment = $('#approverComment').val();

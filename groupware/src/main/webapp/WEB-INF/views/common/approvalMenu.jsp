@@ -137,7 +137,10 @@
                     <button class="btn btn-outline-primary" onclick="window.location.href='/approvedDocuments.ex'">결재완료</button>
                 </li>
                 <li class="nav-item">
-                    <button class="btn btn-outline-primary" onclick="window.location.href='/rejectedDocuments.ex'">결재반려</button>
+                    <button class="btn btn-outline-primary" onclick="window.location.href='/proceedDocuments.ex'">결재진행</button>
+                </li>
+                <li class="nav-item">
+                    <button class="btn btn-outline-primary" onclick="window.location.href='/returendDocuments.ex'">결재반려</button>
                 </li>
                 <li class="nav-item">
                     <button class="btn btn-outline-primary" onclick="window.location.href='/canceledDocuments.ex'">결재취소</button>

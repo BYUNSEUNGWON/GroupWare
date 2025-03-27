@@ -53,6 +53,30 @@
         background-color: #f1f1f1; /* 배경색 변경 */
         cursor: pointer; /* 커서 스타일 변경 */
     }
+    .pagination {
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+    }
+    .pagination a {
+        display: inline-block;
+        width: 45px; /* 버튼의 너비 설정 */
+        height: 35px; /* 버튼의 높이 설정 */
+        line-height: 35px; /* 텍스트가 가운데로 오도록 */
+        text-align: center; /* 텍스트 가운데 정렬 */
+        background-color: #343a40; /* 검은색 배경 */
+        color: white; /* 흰색 텍스트 */
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 0 5px;
+    }
+    .pagination a.active {
+        background-color: #495057; /* 활 활성화된 버튼 색상 */
+    }
+    .pagination a.disabled {
+        background-color: #6c757d; /* 비활성화된 버튼 색상 */
+        pointer-events: none;
+    }
 </style>
 </head>
 <body>
@@ -64,7 +88,22 @@
     <%@ include file="../common/approvalMenu.jsp" %>
 
     <div class="content">
-        <h2 class="text-primary">결재완료</h2>
+        <h2 class="text-primary">
+        <c:choose>
+            <c:when test="${action == 'proceed'}">
+                결재진행
+            </c:when>
+            <c:when test="${action == 'returend'}">
+                결재반려
+            </c:when>
+            <c:when test="${action == 'cancel'}">
+                결재취소
+            </c:when>
+            <c:when test="${action == 'approved'}">
+                결재완료
+            </c:when>
+        </c:choose>
+    </h2>
         <table class="table table-striped table-hover">
             <thead class="table-dark">
                 <tr>
@@ -96,7 +135,32 @@
                 </c:choose>
             </tbody>
         </table>
+        
+        <div class="dropdown" style="text-align: right; margin: 20px;">
+	        <button class="btn btn-secondary dropdown-toggle" type="button" id="itemsPerPageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+	            ${itemsPerPage}개씩 보기
+	        </button>
+	        <ul class="dropdown-menu" aria-labelledby="itemsPerPageDropdown">
+	            <li><a class="dropdown-item" href="javascript:void(0);" onclick="changeItemsPerPage(10)">10개씩 보기</a></li>
+	            <li><a class="dropdown-item" href="javascript:void(0);" onclick="changeItemsPerPage(20)">20개씩 보기</a></li>
+	            <li><a class="dropdown-item" href="javascript:void(0);" onclick="changeItemsPerPage(30)">30개씩 보기</a></li>
+	        </ul>
+    	</div>
+        
+        <!-- 페이징 -->
+        <div class="pagination">
+            <c:if test="${currentPage > 1}">
+                <a href="?currentPage=${currentPage - 1}&itemsPerPage=${itemsPerPage}">이전</a>
+            </c:if>
+            <c:forEach var="i" begin="1" end="${totalPages}">
+                <a href="?currentPage=${i}&itemsPerPage=${itemsPerPage}" class="${i == currentPage ? 'active' : ''}">${i}</a>
+            </c:forEach>
+            <c:if test="${currentPage < totalPages}">
+                <a href="?currentPage=${currentPage + 1}&itemsPerPage=${itemsPerPage}">다음</a>
+            </c:if>
+        </div>
     </div>
+
 
     <!-- 모달 
     <div class="modal fade" id="approvalModal" tabindex="-1" aria-labelledby="approvalModalLabel" aria-hidden="true">
@@ -127,13 +191,28 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript">
+    
+    function changeItemsPerPage(count) {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('itemsPerPage', count);
+        urlParams.set('currentPage', 1); // 페이지를 1로 리셋
+        window.location.search = urlParams.toString();
+    }
+    
     document.addEventListener('DOMContentLoaded', function() {
         // 각 테이블 행에 클릭 이벤트 리스너 추가
         var rows = document.querySelectorAll('table tbody tr');
         rows.forEach(function(row) {
             row.addEventListener('click', function() {
                 var documentNo = this.cells[3].innerText;
-                var url = '/document/detail.ex?documentNo=' + documentNo + '&action=approved';
+                var actionValue = '${action}';
+                var url = '';
+                if(actionValue == "proceed"){
+                	var url = '/document/detail.ex?documentNo=' + documentNo + '&action=proceed';
+                }else{
+                	var url = '/document/detail.ex?documentNo=' + documentNo + '&action=approved';
+                }
+                
                 window.open(url, '_blank');
             });
         });

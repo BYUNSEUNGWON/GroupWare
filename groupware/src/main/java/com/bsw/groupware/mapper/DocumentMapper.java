@@ -34,6 +34,10 @@ public interface DocumentMapper {
 
 	void updtDocument(String documentNo, String comment, String resultStatus);
 
+	int countApprovalList(Map<String, Object> params);
+
+	int countByStatus(Map<String, Object> params);
+
 	
 	
 }

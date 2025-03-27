@@ -102,9 +102,46 @@
 	        AND RESULT_STATUS = 'approved'
 	        AND SUBMITTER_ID = #{user}
 	    </if>
+	    <if test="action == 'proceed'">
+	        AND RESULT_STATUS = 'submit'
+	        AND SUBMITTER_ID = #{user}
+	    </if>
+	    <if test="action == 'returend'">
+	        AND RESULT_STATUS = 'returened'
+	        AND SUBMITTER_ID = #{user}
+	    </if>
+	    <if test="action == 'cancel'">
+	        AND RESULT_STATUS = 'cancel'
+	        AND SUBMITTER_ID = #{user}
+	    </if>
 	    ORDER BY REGIST_DT DESC
+    	LIMIT #{limit} OFFSET #{offset}
 	</select>
 	
+	<select id="countApprovalList" parameterType="map" resultType="int">
+	    SELECT COUNT(*) FROM IA_APPR_DOC_TN 
+	    WHERE 1=1
+	    <if test="action == 'approval'">
+	        AND RESULT_STATUS = 'submit'
+	        AND APPROVER_ID = #{user}
+	    </if>
+	    <if test="action == 'approved'">
+	        AND RESULT_STATUS = 'approved'
+	        AND SUBMITTER_ID = #{user}
+	    </if>
+	    <if test="action == 'proceed'">
+	        AND RESULT_STATUS = 'submit'
+	        AND SUBMITTER_ID = #{user}
+	    </if>
+	    <if test="action == 'returend'">
+	        AND RESULT_STATUS = 'returened'
+	        AND SUBMITTER_ID = #{user}
+	    </if>
+	    <if test="action == 'cancel'">
+	        AND RESULT_STATUS = 'cancel'
+	        AND SUBMITTER_ID = #{user}
+	    </if>
+	</select>
 	    
     <select id="getDetailContents" resultType="com.bsw.groupware.model.ApprDocVO">
 	    SELECT 
@@ -156,5 +193,30 @@
     		RESULT_STATUS = #{resultStatus}
    		WHERE DOCUMENT_NO = #{documentNo}
     </update>
+    
+    <select id="countByStatus" parameterType="map" resultType="int">
+	    SELECT COUNT(*) FROM IA_APPR_DOC_TN 
+	    WHERE 1=1
+	    <if test="action == 'approval'">
+	        AND RESULT_STATUS = 'submit'
+	        AND APPROVER_ID = #{user}
+	    </if>
+	    <if test="action == 'approved'">
+	        AND RESULT_STATUS = 'approved'
+	        AND SUBMITTER_ID = #{user}
+	    </if>
+	    <if test="action == 'proceed'">
+	        AND RESULT_STATUS = 'submit'
+	        AND SUBMITTER_ID = #{user}
+	    </if>
+	    <if test="action == 'returend'">
+	        AND RESULT_STATUS = 'returened'
+	        AND SUBMITTER_ID = #{user}
+	    </if>
+	    <if test="action == 'cancel'">
+	        AND RESULT_STATUS = 'cancel'
+	        AND SUBMITTER_ID = #{user}
+	    </if>
+	</select>
     
 </mapper>
