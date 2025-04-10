@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../common/header.jsp" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -38,10 +37,18 @@
             margin: 0;
             padding: 20px;
         }
+		.header-container {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 10;
+        background: white;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    	}
         #calendar {
             max-width: 900px;
             margin: 0 auto;
-            margin-top: 30px;
+            margin-top: 60px;
         }
         /* 기본 이벤트 스타일 */
         .event-title {
@@ -60,6 +67,9 @@
     </style>
 </head>
 <body>
+    <div class="header-container">
+        <%@ include file="../common/header.jsp" %>
+    </div>
     <div id="calendar"></div>
     <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -209,7 +219,7 @@
                                 let hours = Math.floor(duration.asHours());
                                 let minutes = duration.minutes();
                                 html += '<div class="endTime"> [퇴근] : ' + endDate + '</div>';
-                                html += '<div class="totalTime"> [합계] : ' + hours + '시간 ' + minutes + '</div>';
+                                html += '<div class="totalTime"> [합계] : ' + hours + '시간 ' + minutes + '분</div>';
                             }
                             content.innerHTML = html;
                             return { domNodes: [content] };

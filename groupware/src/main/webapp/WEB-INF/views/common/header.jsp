@@ -18,6 +18,18 @@
         align-items: center;
         padding: 0 20px;
     }
+    .navbar {
+	    background-color: #333;
+	    display: flex;
+	    justify-content: space-between;
+	    align-items: center;
+	    padding: 0; /* 좌우 여백 제거 */
+	    width: 100%; /* 너비를 100%로 설정 */
+	    position: fixed; /* 상단에 고정 */
+	    top: 0; /* 상단에서 0 위치 */
+	    left: 0; /* 왼쪽에서 0 위치 */
+	    z-index: 1000; /* 다른 요소들 위로 오게 만듦 */
+	}
     .navbar-menu {
         display: flex;
         justify-content: center;
@@ -74,7 +86,7 @@
         <div class="navbar-menu">
             <a href="/hrList.ex">근태기록</a>
             <a href="/document.ex">전자결재</a>
-            <a href="#about">About</a>
+            <a href="/teambox.ex">팀박스</a>
             <a href="#contact">Contact</a>
         </div>
         <div class="user-button-container">

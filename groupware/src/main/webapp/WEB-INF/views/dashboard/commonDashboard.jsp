@@ -18,6 +18,7 @@
         user-select: none;
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         box-sizing: border-box;
+        margin-top: 80px;
     }
     .widget-content {
         padding: 20px !important;
@@ -435,44 +436,32 @@
                 </div>
             </div>
         </div>
-        </div>
-        <!-- 
+        
         <div class="widget-content padding-20 radius">
-            <div class="widget-work counter text-left">
+			<div class="widget-work counter text-left">
                 <div class="counter counter-lg padding-vertical-35 padding-horizontal-20">                        
                     <div class="counter-label font-size-15">
-                        기타
+                        팀박스
                     </div>
                     <div class="other-section">
-                        <div class="other">
-                            <span class="grey-500">기타 정보 : </span>
-                            <span id="otherInfo" class="txt font-weight-700 grey-700">내용 없음</span>
-                        </div>
+                    <div class="news-section">
+                        <ul class="list-unstyled">
+                            <c:forEach var="teams" items="${teams}">
+                                <li>
+                                    <a href="${teams.link}" target="_blank" class="news-link">
+                                        ${teams.title}
+                                    </a>
+                                </li>
+                            </c:forEach>
+                        </ul>
                     </div>
-                </div>
-                <div class="margin-top-15">
-                    <button data-action="actionOne" class="btn btn-sm btn-primary btn-block margin-top-10 text-left has-action btn-rotate-horizontal">
-                        <div class="circle-wrapper">
-                            <div class="icon text-primary">
-                                <i class="fas fa-arrow-circle-right"></i>
-                            </div>
-                        </div>
-                        <div class="font-size-25">기타 작업</div>
-                        <span class="font-size-14">기타 작업 수행</span>
-                    </button>
-                    <button data-action="actionTwo" class="btn btn-sm btn-success btn-block hidden margin-top-10 text-left has-action btn-rotate-horizontal">
-                        <div class="circle-wrapper">
-                            <div class="icon text-success">
-                                <i class="fas fa-arrow-circle-right"></i>
-                            </div>
-                        </div>
-                        <div class="font-size-25">기타 작업 2</div>
-                        <span class="font-size-14">기타 작업 2 수행</span>
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>
         
+        </div>
+        <!-- 
         <div class="widget-content padding-20 radius">
             <div class="widget-work counter text-left">
                 <div class="counter counter-lg padding-vertical-35 padding-horizontal-20">                        
@@ -549,7 +538,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function() {
-            // AJAX 요청을 보내고 결과를 처리하는 함수
             function fetchDocumentCounts() {
                 $.ajax({
                     url: '/dashboard/counts.ex',

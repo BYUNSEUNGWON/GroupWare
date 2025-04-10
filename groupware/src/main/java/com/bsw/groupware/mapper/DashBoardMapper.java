@@ -1,8 +1,11 @@
 package com.bsw.groupware.mapper;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+
+import com.bsw.groupware.model.TeamsVO;
 
 @Mapper
 public interface DashBoardMapper {
@@ -14,6 +17,8 @@ public interface DashBoardMapper {
 	Map getSelctJob(String user);
 
 	void endJob(String user);
+
+	List<TeamsVO> getTeamsTitle(String user);
 	
 	
 }

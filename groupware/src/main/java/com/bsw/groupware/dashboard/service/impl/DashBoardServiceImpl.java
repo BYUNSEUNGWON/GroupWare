@@ -14,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -34,6 +35,7 @@ import org.springframework.web.client.RestTemplate;
 import com.bsw.groupware.dashboard.service.DashBoardService;
 import com.bsw.groupware.mapper.DashBoardMapper;
 import com.bsw.groupware.model.NaverNewsResponseVO;
+import com.bsw.groupware.model.TeamsVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -104,6 +106,18 @@ public class DashBoardServiceImpl implements DashBoardService{
             throw new RuntimeException("API 요청과 응답 실패", e);
         }
     }
+
+	@Override
+	public List<TeamsVO> getTeamsTitle(String user) {
+        List<TeamsVO> teamsList = dashBoardMapper.getTeamsTitle(user);
+
+        for (TeamsVO team : teamsList) {
+            String link = "/teams/detail?title=" + team.getTitle() + "&seq=" + team.getSeq();
+            team.setLink(link);
+        }
+        
+        return teamsList;
+	}
         
 
     

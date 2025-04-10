@@ -19,4 +19,11 @@
     	WHERE USER_ID = #{user}
     	 AND DATE(START_DT) = DATE(NOW())
     </update>
+    
+    <select id="getTeamsTitle">
+    	SELECT SEQ, TITLE, CONTENTS, COUNT, REGIST_USER_ID, REGIST_DT
+    		FROM IA_TEAMS_TN
+    	WHERE REGIST_USER_ID = #{user}
+    </select>
+    
 </mapper>

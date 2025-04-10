@@ -1,6 +1,7 @@
 package com.bsw.groupware.dashboard.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 
@@ -23,6 +24,7 @@ import com.bsw.groupware.login.service.LoginService;
 import com.bsw.groupware.login.service.NaverService;
 import com.bsw.groupware.model.NaverNewsResponseVO;
 import com.bsw.groupware.model.NaverVO;
+import com.bsw.groupware.model.TeamsVO;
 import com.bsw.groupware.model.UserVO;
 import com.nimbusds.jose.shaded.gson.Gson;
 
@@ -54,19 +56,26 @@ public class DashboardController {
 	    String user = (String) session.getAttribute("user");
 	    Map<String, Object> jobTimeMap = dashBoardService.getSelctJob(user);
 	    NaverNewsResponseVO  newsData = dashBoardService.getTopHeadlines();
+	    
+	    List<TeamsVO> teams = dashBoardService.getTeamsTitle(user);
 
 	    String startDt = (jobTimeMap != null && jobTimeMap.get("START_DT") != null) ? jobTimeMap.get("START_DT").toString() : null;
 	    String endDt = (jobTimeMap != null && jobTimeMap.get("END_DT") != null) ? jobTimeMap.get("END_DT").toString() : null;
-
+	    
 	    model.addAttribute("startDt", startDt);
 	    model.addAttribute("endDt", endDt);
         model.addAttribute("articles", newsData.getItems());
-
+        model.addAttribute("teams", teams);
+/*
         logger.debug("articles value :: {} ", newsData.getItems());
         
         logger.debug("articles valie :: {} ", newsData.getItems().get(0).getTitle());
         logger.debug("articles valie :: {} ", newsData.getItems().get(0).getLink());
+        for(TeamsVO team : teams) {
+        	logger.debug("teams link valie :: {} ", team.getLink());	
+        }
 
+*/
 	    return "/dashboard/commonDashboard";
 	}
 	

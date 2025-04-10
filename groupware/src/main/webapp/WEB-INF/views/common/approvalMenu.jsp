@@ -26,7 +26,7 @@
         width: 100%;
         margin-bottom: 15px;
     }
-        body {
+	body {
         background-color: #f4f6f9;
     }
     .modal-container {
