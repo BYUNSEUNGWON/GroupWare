@@ -98,7 +98,7 @@
         </nav>
 
         <!-- Write Button -->
-        <button class="write-button" onclick="window.location.href='/write'">+</button>
+        <button class="write-button" onclick="window.location.href='/teambox/write.ex?action=new'">+</button>
     </div>
 </body>
 </html>

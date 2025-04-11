@@ -58,7 +58,7 @@ public class TeamboxController {
         List<TeamsVO> teams = dashBoardService.getTeamsTitle(user);
 
         // 한 페이지에 5개의 아이템을 표시
-        int pageSize = 5;
+        int pageSize = 10;
         int totalItems = teams.size();  // 전체 아이템 갯수
         int totalPages = (int) Math.ceil((double) totalItems / pageSize);  // 전체 페이지 수
 
@@ -72,6 +72,17 @@ public class TeamboxController {
         model.addAttribute("totalPages", totalPages);  // 전체 페이지 수
 
         return "/teambox/teamboxList";
+    }
+    
+    @RequestMapping("/teambox/write.ex")
+    public String writeTeambox(HttpSession session, Model model, @RequestParam(value = "action") String action) {
+    	logger.debug("writeTeambox start");
+        String user = (String) session.getAttribute("user");
+        List<TeamsVO> teams = dashBoardService.getTeamsTitle(user);
+        
+        model.addAttribute("action", action);
+
+        return "/teambox/write";
     }
 
 }
