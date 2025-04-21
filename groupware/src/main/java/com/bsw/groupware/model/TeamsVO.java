@@ -11,6 +11,7 @@ public class TeamsVO {
     private String registUserId;
     private String registDt;
     private String link;
+    private String fileId;
 
     private List<TeamsVO> teams;	
     
@@ -67,7 +68,25 @@ public class TeamsVO {
 	public void setLink(String link) {
 		this.link = link;
 	}
+	public String getFileId() {
+		return fileId;
+	}
+	public void setFileId(String fileId) {
+		this.fileId = fileId;
+	}
+	
+	@Override
+	public String toString() {
+		return "TeamsVO [title=" + title + ", contents=" + contents + ", count=" + count + ", seq=" + seq
+				+ ", registUserId=" + registUserId + ", registDt=" + registDt + ", link=" + link + ", fileId=" + fileId
+				+ ", teams=" + teams + ", getTitle()=" + getTitle() + ", getContents()=" + getContents()
+				+ ", getCount()=" + getCount() + ", getRegistUserId()=" + getRegistUserId() + ", getRegistDt()="
+				+ getRegistDt() + ", getTeams()=" + getTeams() + ", getSeq()=" + getSeq() + ", getLink()=" + getLink()
+				+ ", getFileId()=" + getFileId() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
+				+ ", toString()=" + super.toString() + "]";
+	}
 
+	
 	
 
 }

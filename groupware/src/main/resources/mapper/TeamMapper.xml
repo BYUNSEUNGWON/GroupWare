@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bsw.groupware.mapper.TeamMapper">
+    
+    <insert id="saveTeambox">
+    	INSERT INTO IA_TEAMS_TN(TITLE, CONTENTS, FILE_ID, REGIST_USER_ID, REGIST_DT)
+        VALUES (#{title}, #{contents}, #{fileId}, #{registUserId}, NOW())
+    </insert>
+    
+    
+    <select id="getDetail" resultType="com.bsw.groupware.model.TeamsVO">
+	    SELECT
+		    SEQ,
+		    TITLE,
+		    CONTENTS,
+		    COUNT,
+		    FILE_ID as fileId,
+		    REGIST_USER_ID as registUserId,
+		    REGIST_DT as registDt
+		FROM IA_TEAMS_TN
+		WHERE SEQ = #{seq} AND TITLE = #{title}
+    </select>
+</mapper>

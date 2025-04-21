@@ -15,9 +15,11 @@ import com.bsw.groupware.login.service.LoginService;
 import com.bsw.groupware.login.service.NaverService;
 import com.bsw.groupware.mapper.DocumentMapper;
 import com.bsw.groupware.mapper.LoginMapper;
+import com.bsw.groupware.mapper.TeamMapper;
 import com.bsw.groupware.model.ApprDocVO;
 import com.bsw.groupware.model.ApprovalFormVO;
 import com.bsw.groupware.model.FileMetadata;
+import com.bsw.groupware.model.TeamsVO;
 import com.bsw.groupware.model.UserVO;
 import com.bsw.groupware.teambox.service.TeamboxService;
 
@@ -26,11 +28,24 @@ public class TeamboxServiceImpl implements TeamboxService{
 	
 	@Autowired
 	DocumentMapper documentMapper;
+	
+	@Autowired
+	TeamMapper teamMapper;
 
 	@Override
 	public List<ApprovalFormVO> getformList() {
 		
 		return documentMapper.getFormList();
+	}
+
+	@Override
+	public void saveTeambox(TeamsVO teamVO) {
+		teamMapper.saveTeambox(teamVO);
+	}
+
+	@Override
+	public TeamsVO getDetail(String title, String seq) {
+		return 	teamMapper.getDetail(title, seq);
 	}
 
 

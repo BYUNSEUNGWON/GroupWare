@@ -57,7 +57,7 @@ public class DashboardController {
 	    Map<String, Object> jobTimeMap = dashBoardService.getSelctJob(user);
 	    NaverNewsResponseVO  newsData = dashBoardService.getTopHeadlines();
 	    
-	    List<TeamsVO> teams = dashBoardService.getTeamsTitle(user);
+	    List<TeamsVO> teams = dashBoardService.getTeamsTitleLimit(user);
 
 	    String startDt = (jobTimeMap != null && jobTimeMap.get("START_DT") != null) ? jobTimeMap.get("START_DT").toString() : null;
 	    String endDt = (jobTimeMap != null && jobTimeMap.get("END_DT") != null) ? jobTimeMap.get("END_DT").toString() : null;

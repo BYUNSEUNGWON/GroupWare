@@ -46,7 +46,7 @@
     <div class="card shadow-sm">
         <div class="card-body">
             <h4 class="card-title">New TeamBox</h4>
-            <form action="saveMemo.jsp" method="post" enctype="multipart/form-data">
+            <form action="/teambox/save.ex" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="title" class="form-label">제목</label>
                     <input type="text" class="form-control" id="title" name="title" required>

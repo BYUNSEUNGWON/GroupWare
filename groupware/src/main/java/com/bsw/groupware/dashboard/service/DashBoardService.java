@@ -19,5 +19,7 @@ public interface DashBoardService {
 	NaverNewsResponseVO getTopHeadlines();
 	
 	List<TeamsVO> getTeamsTitle(String user);
+
+	List<TeamsVO> getTeamsTitleLimit(String user);
 	
 }

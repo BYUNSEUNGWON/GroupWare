@@ -1,0 +1,22 @@
+######Common to all adapterse.######
+
+#FILE, TC or DB.
+INTERFACE_SOURCE_TYPE=TC
+
+#FILE, TC or DB.
+INTERFACE_TARGET_TYPE=TC
+
+#TRUE or FALSE
+PERSISTENT=TRUE
+
+SEQUENTIAL_DATA=FALSE
+
+
+
+QUEUE_COUNT=1
+QUEUE1=FUTUREM_FLOW_01
+
+#ADAPTER_NAME=KMS2JMS
+#DESTINATION_NAME=JMS01
+
+#----- > Do not remove this line <---------------

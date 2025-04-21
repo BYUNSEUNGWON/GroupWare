@@ -24,6 +24,15 @@
     	SELECT SEQ, TITLE, CONTENTS, COUNT, REGIST_USER_ID, REGIST_DT
     		FROM IA_TEAMS_TN
     	WHERE REGIST_USER_ID = #{user}
+    	ORDER BY SEQ DESC
     </select>
+    
+	<select id="getTeamsTitleLimit">
+    	SELECT SEQ, TITLE, CONTENTS, COUNT, REGIST_USER_ID, REGIST_DT
+    		FROM IA_TEAMS_TN
+    	WHERE REGIST_USER_ID = #{user}
+    	ORDER BY SEQ DESC Limit 10
+    </select>
+    
     
 </mapper>

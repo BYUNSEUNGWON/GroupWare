@@ -9,6 +9,7 @@ import com.bsw.groupware.model.ApprDocVO;
 import com.bsw.groupware.model.ApprovalFormVO;
 import com.bsw.groupware.model.FileMetadata;
 import com.bsw.groupware.model.MenuVO;
+import com.bsw.groupware.model.TeamsVO;
 import com.bsw.groupware.model.UserVO;
 
 @Mapper

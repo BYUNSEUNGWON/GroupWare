@@ -112,7 +112,19 @@ public class DashBoardServiceImpl implements DashBoardService{
         List<TeamsVO> teamsList = dashBoardMapper.getTeamsTitle(user);
 
         for (TeamsVO team : teamsList) {
-            String link = "/teams/detail?title=" + team.getTitle() + "&seq=" + team.getSeq();
+            String link = "/teams/detail.ex?title=" + team.getTitle() + "&seq=" + team.getSeq();
+            team.setLink(link);
+        }
+        
+        return teamsList;
+	}
+
+	@Override
+	public List<TeamsVO> getTeamsTitleLimit(String user) {
+        List<TeamsVO> teamsList = dashBoardMapper.getTeamsTitleLimit(user);
+
+        for (TeamsVO team : teamsList) {
+            String link = "/teams/detail.ex?title=" + team.getTitle() + "&seq=" + team.getSeq();
             team.setLink(link);
         }
         

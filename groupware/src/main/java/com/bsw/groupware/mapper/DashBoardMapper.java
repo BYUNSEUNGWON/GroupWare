@@ -19,6 +19,8 @@ public interface DashBoardMapper {
 	void endJob(String user);
 
 	List<TeamsVO> getTeamsTitle(String user);
+
+	List<TeamsVO> getTeamsTitleLimit(String user);
 	
 	
 }
