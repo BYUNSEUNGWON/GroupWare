@@ -56,7 +56,6 @@
 			            </ul>
 			        </div>
     			</c:if>
-            <button type="button" class="btn btn-secondary" onclick="history.go(-1)">돌아가기</button>
         </div>
     </div>
 </div>

@@ -77,16 +77,36 @@
     }
 
     function openCommentPopup() {
+    	
+        var subject = document.getElementById('subject').value;
+        var approver = document.getElementById('approver').value;
+        var contents = document.getElementById('editor').value;
+
+        if (!subject) {
+            alert('제목을 입력해주세요.');
+            return;
+        }
+
+        if (!approver) {
+            alert('결재자를 선택해주세요.');
+            return;
+        }
+        
+        if (!contents) {
+            alert('내용을 작성해주세요.');
+            return;
+        }
+    	
         var userId = document.getElementById('submitterId').value;
         var userNm = document.getElementById('userSubmitName').value;
-        console.log(userId);
-        console.log(userNm);
+
+        var userNm = document.getElementById('userSubmitName').value;
         var width = 750;
         var height = 500;
         var left = (window.screen.width - width) / 2;
         var top = (window.screen.height - height) / 2;
         var specs = 'width='+width+',height='+height+',top='+top+',left='+left+',scrollbars=no';
-        console.log(specs);
+        
         window.open('/commentPopup.ex?name='+userNm+'&Id='+userId, '결재 요청 코멘트', specs);
     }
 

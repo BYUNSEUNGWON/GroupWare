@@ -118,8 +118,14 @@
 	}
 
 	function approveDocument() {
-		if(confirm("승인처리하시겠습니까?")){
-			var approverComment = $('#approverComment').val();
+		var approverComment = $('#approverComment').val()
+		
+		if(!approverComment){
+	        alert('코멘트를 입력해주세요.');
+	        return;
+		}
+		
+		if(confirm("승인처리하시겠습니까?")){;
 		    var documentNo = "${document.documentNo}";
 		    
 		    $.ajax({
@@ -144,8 +150,15 @@
 	}
 	
 	function rejectDocument() {
+
+	    var approverComment = $('#approverComment').val();
+	    
+		if(!approverComment){
+	        alert('코멘트를 입력해주세요.');
+	        return;
+		}
+		
 		if(confirm("반려처리하시겠습니까?")){
-		    var approverComment = $('#approverComment').val();
 		    var documentNo = "${document.documentNo}";
 		    
 		    $.ajax({

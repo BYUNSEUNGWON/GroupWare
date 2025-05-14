@@ -91,6 +91,32 @@ public class LoginController {
 		}
     }
     
+    @PostMapping("/modify.ex")
+    public String modifySuccess(HttpServletRequest request, Model model, HttpSession session) throws Exception{
+    	
+	    String userId = (String) session.getAttribute("user");
+	    
+	    String name = request.getParameter("name");
+	    
+	    logger.debug("userId , name :: {}, {}", userId, name);
+	    // 25.05.14 여기서 회원정보 수정한 거 UPDATE 치는거부터 해야함
+	    return "";
+    }
+    
+    @GetMapping("/modify.ex")
+    public String modify(HttpServletRequest request, Model model, HttpSession session) throws Exception{
+    	
+	    String userId = (String) session.getAttribute("user");
+	    UserVO user = loginService.modify(userId);
+	    
+	    logger.debug("user Value :: {}", user.toString());
+	    
+		//user.setUser_ip(getClientIp(request));
+	    model.addAttribute("user", user);
+		
+	    return "login/modify";
+    }
+    
     @GetMapping("/checkUserId.ex")
     public ResponseEntity<String> checkUserId(@RequestParam String userId) throws Exception {
     	logger.debug("checkUserId :: {}", userId);

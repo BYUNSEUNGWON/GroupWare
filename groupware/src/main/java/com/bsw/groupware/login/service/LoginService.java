@@ -10,5 +10,7 @@ public interface LoginService {
 	void saveUser(UserVO user) throws Exception;
 
 	boolean authenticate(String username, String password);
+
+	UserVO modify(String userId);
 	
 }

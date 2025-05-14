@@ -97,7 +97,7 @@
                 </svg>
             </button>
             <div class="dropdown-content">
-                <a href="#profile">정보 변경</a>
+                <a href="/modify.ex">정보 변경</a>
                 <a href="/logout.ex">로그아웃</a>
             </div>
             

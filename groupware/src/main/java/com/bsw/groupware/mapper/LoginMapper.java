@@ -13,4 +13,5 @@ public interface LoginMapper {
 	void saveUser(UserVO user);
 
 	UserVO findByUsername(String username);
+
 }

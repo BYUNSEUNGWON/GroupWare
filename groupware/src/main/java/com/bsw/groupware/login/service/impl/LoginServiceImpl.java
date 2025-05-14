@@ -64,4 +64,9 @@ public class LoginServiceImpl implements LoginService{
         }
 	}
 
+	@Override
+	public UserVO modify(String userId) {
+		return loginMapper.findByUsername(userId);
+	}
+
 }

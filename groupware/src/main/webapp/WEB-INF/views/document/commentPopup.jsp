@@ -30,7 +30,7 @@
         </div>
         <div class="mb-3">
             <label for="comment" class="form-label">코멘트</label>
-            <textarea class="form-control" id="comment" rows="4" placeholder="코멘트를 입력해주세요"></textarea>
+            <textarea class="form-control" id="comment" rows="4">결재 요청 드립니다.</textarea>
         </div>
         <div class="d-flex justify-content-end">
         <button class="btn btn-primary me-2" onclick="submitComment()">확인</button>

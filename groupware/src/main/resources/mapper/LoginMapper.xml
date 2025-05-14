@@ -47,7 +47,7 @@
 			USER_NICK as nickname,
 			USER_DEPT as dept, 
 			USER_JOB_POSITION as position, 
-			EMAIL as eamil, 
+			EMAIL as email, 
 			PHONE as phone,
 			NAVER_USER as naverUser,
 			KAKAO_USER as kakaoUser, 
@@ -56,5 +56,6 @@
 			UPDT_DT
 		FROM IA_USER_TN
         WHERE USER_ID = #{username}
+        limit 1
     </select>
 </mapper>

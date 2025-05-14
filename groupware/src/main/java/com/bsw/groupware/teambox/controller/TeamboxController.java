@@ -217,7 +217,7 @@ public class TeamboxController {
 		}
     	// 첨부파일 처리 종료
     	
-        return "/teambox/teamboxList";
+        return "redirect:/teambox.ex";
     }
 
 }
